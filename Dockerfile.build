@@ -1,0 +1,16 @@
+# 使用指定版本的 nginx:latest
+#FROM nginx:1.29.3
+
+FROM harbor.innomedi.cn/yuanxin/nginx:1.29.3
+
+# 指定镜像创建者信息
+LABEL maintainer="allen.ou@innomedi.cn"
+
+COPY ./nginx.conf /etc/nginx
+COPY ./dist /usr/share/nginx/html
+
+# 对外开放容器的 3000 端口
+EXPOSE 80 443
+
+
+

@@ -1,0 +1,53 @@
+.liveUser {
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  height: 474px;
+
+  .header {
+    display: flex;
+    padding: 10px;
+    height: 40px;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .content {
+    padding: 0 20px;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+
+    .item {
+      color: #ffffff;
+      display: flex;
+      cursor: pointer;
+      height: 40px;
+      margin-bottom: 10px;
+
+      .itemContent {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+
+        .name {
+          .value {
+            margin-left: 5px;
+          }
+        }
+
+        .type {
+          :global {
+            .ant-tag {
+              border-radius: 18px;
+            }
+          }
+        }
+
+        .time {
+          color: #d8d8d8;
+        }
+      }
+    }
+  }
+}

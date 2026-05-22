@@ -1,0 +1,132 @@
+.liveEcgHeader {
+  .content {
+    //margin-bottom: 22px;
+
+    .searchContent {
+      display: flex;
+      //padding-left: 16px;
+
+      .statistics {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+
+        flex: 2;
+        color: #ffffff;
+        font-size: 18px;
+
+        .registerNumber {
+          margin-right: 16px;
+        }
+
+        .onlineNumber {
+          margin-right: 16px;
+        }
+
+        .warnPositive {
+          margin-right: 16px;
+        }
+
+        .severePositive {
+        }
+      }
+
+      .searchActions {
+        display: flex;
+        height: 46px;
+        width: 200px;
+        border-radius: 16px;
+        //border: 1px solid #4b535c;
+        justify-content: space-around;
+        margin-left: 16px;
+
+        .info {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+
+          align-self: center;
+          justify-content: center;
+          flex: 1;
+
+          .bell {
+            font-size: 18px;
+            color: #2589b4;
+          }
+        }
+
+        .warn {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+
+          font-size: 18px;
+          color: #999999;
+          align-self: center;
+          justify-content: center;
+          flex: 1;
+
+          .openWarn {
+            :global {
+              .anticon-bell {
+              }
+            }
+          }
+
+          .mutedWarn {
+            :global {
+              .anticon-stop {
+              }
+            }
+          }
+        }
+
+        .line {
+          height: 45px;
+          width: 1px;
+          background-color: #656d74;
+        }
+
+        .sound {
+          cursor: pointer;
+          display: flex;
+          flex: 1;
+
+          font-size: 18px;
+          color: #999999;
+          align-self: center;
+          justify-content: center;
+
+          .openSound {
+            :global {
+              .anticon-sound {
+              }
+            }
+          }
+
+          .mutedSound {
+            :global {
+              .anticon-muted {
+              }
+            }
+          }
+        }
+
+        .set {
+          cursor: pointer;
+          display: flex;
+          flex: 1;
+
+          font-size: 18px;
+          color: #999999;
+          align-self: center;
+          justify-content: center;
+        }
+      }
+
+      .photo {
+        margin-left: 16px;
+      }
+    }
+  }
+}

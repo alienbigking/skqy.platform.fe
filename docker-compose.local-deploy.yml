@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  fe:
+    #    build: .                  # 会使用当前目录下的 Dockerfile 构建镜像
+    build:
+      context: .
+      dockerfile: Dockerfile.local-deploy
+    image: harbor.innomedi.cn/yuanxin/local-deploy-platform:1.0.0
+    container_name: "lxpj-platform"
+    restart: always
+    ports:
+      - "8093:80"
+    #      - "8093:443"
+
+    #    volumes:
+    #      - ./nginx.conf:/etc/nginx/nginx.conf
+    #      - ./dist:/usr/share/nginx/html
+    environment:
+      - TZ=Asia/Shanghai
+#    networks:
+#      - yuanxin
+
+#networks:
+#  yuanxin:
+#    external: true

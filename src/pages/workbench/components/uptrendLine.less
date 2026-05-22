@@ -1,0 +1,66 @@
+.uptrendLine {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #edeff2;
+  border-radius: 5px;
+  //width: 248px;
+  height: 318px;
+
+  .header {
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    border-bottom: 1px solid #edeff2;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .content {
+    display: flex;
+
+    .organizationRanking {
+      //width: 230px;
+      width: 100%;
+      height: 280px;
+      //border: 1px solid #e8e8e8;
+      display: flex;
+      flex-direction: column;
+      padding: 0 10px;
+
+      .organizationHeader {
+        display: flex;
+        height: 36px;
+        align-items: center;
+
+        .rankingTitle {
+          width: 32px;
+          display: flex;
+          justify-content: center;
+          margin-right: 25px;
+          font-weight: bold;
+        }
+
+        .organizationTitle {
+          font-weight: bold;
+        }
+      }
+
+      .organizationContent {
+        .item {
+          display: flex;
+          border-bottom: 1px solid #edeff2;
+          height: 26px;
+          color: #4c4e53;
+        }
+
+        .rankingNumber {
+          width: 32px;
+          display: flex;
+          justify-content: center;
+          margin-right: 25px;
+        }
+      }
+    }
+  }
+}

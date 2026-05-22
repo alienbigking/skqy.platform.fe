@@ -1,0 +1,44 @@
+.sliderCaptcha {
+  height: 40px;
+  width: 100%;
+  background-color: #e2e2e4;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  .sliderTrack {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 10px;
+  }
+
+  .successState {
+    background-color: #72c240;
+  }
+
+  .sliderThumb {
+    width: 50px;
+    height: 40px;
+    background-color: #fefeff;
+    border: 1px solid #d4d4d4;
+    border-radius: 10px;
+    position: absolute;
+    cursor: pointer;
+    transition: left 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #3875f6;
+      border: 1px solid #3875f6;
+
+      :global {
+        .anticon-double-right {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}

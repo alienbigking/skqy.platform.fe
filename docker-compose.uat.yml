@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  fe:
+    #    build: .                  # 使用当前目录下的 Dockerfile 构建镜像
+    build:
+      context: .
+      dockerfile: Dockerfile.uat
+    image: harbor.innomedi.cn/yuanxin/uat-platform:1.0.0
+    container_name: "lxpj-platform"          # 容器名称
+    ports:
+      - "8093:80"                          # 映射本地端口到容器端口
+    restart: always                        # 自动重启
+    environment:
+      NODE_ENV: uat                 # 可自定义环境变量
+    # volumes:                               # 如果需要挂载本地文件到容器
+    #   - ./config:/usr/share/nginx/html/config

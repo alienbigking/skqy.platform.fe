@@ -1,0 +1,63 @@
+.loginAction {
+  .title {
+    margin-bottom: 50px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #232323;
+  }
+
+  .main {
+    width: 350px;
+
+    .verification {
+      display: flex;
+      justify-content: space-between;
+
+      :global {
+        .ant-input {
+          width: 210px;
+        }
+      }
+
+      .verificationBtn {
+        width: 120px;
+        background-color: #33a596;
+
+        &:disabled {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+    }
+
+    .btns {
+      margin-bottom: 20px;
+
+      .loginBtn {
+        width: 100%;
+        background-color: #33a596;
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #33a596;
+      padding: 0 50px;
+
+      .registerBtn {
+        cursor: pointer;
+      }
+
+      .line {
+        width: 1px;
+        height: 14px;
+        background-color: #33a596;
+      }
+
+      .forgetPassword {
+        cursor: pointer;
+      }
+    }
+  }
+}

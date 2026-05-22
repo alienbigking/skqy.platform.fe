@@ -1,0 +1,129 @@
+# docker容器部署
+stages:
+  - install
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules
+    - build
+
+job_install:
+  stage: install
+  tags:
+    - tool
+  only:
+    - main
+    - uat
+    - stage
+  script:
+    - npm install
+
+job_build:
+  stage: build
+  tags:
+    - tool
+  only:
+    - main
+    - uat
+    - stage
+  script:
+    - chmod +x gitlab-build.sh
+    - ./gitlab-build.sh
+
+#   script:
+#      - echo "Environment variables:"
+#      - env
+#      - echo "Running build command:"
+#      - npm run build:$CI_COMMIT_BRANCH
+
+job_deploy:
+  stage: deploy
+  tags:
+    - tool
+  only:
+    - main
+    - uat
+    - stage
+  script:
+    - chmod +x gitlab-deploy.sh
+    - ./gitlab-deploy.sh
+
+#   script:
+#     - docker build -t harbor.innomedi.cn/yuanxin/platfrom:$CI_COMMIT_BRANCH .
+#     - docker login harbor.innomedi.cn -u $CI_HARBOR_USERNAME -p $CI_HARBOR_PASSWORD
+#     - docker push harbor.innomedi.cn/yuanxin/platfrom:$CI_COMMIT_BRANCH
+#     - docker rmi harbor.innomedi.cn/yuanxin/platfrom:$CI_COMMIT_BRANCH
+#     - docker stop platfrom
+#     - docker rm platfrom
+#     - docker run -d --name platfrom -p 8092:80 harbor.innomedi.cn/yuanxin/platfrom:$CI_COMMIT_BRANCH
+
+# 宿主机直接部署
+#image: node:16.16.0
+#
+#stages:
+#  - install
+#  - build
+#  - deploy
+#
+#cache:
+#  paths:
+#    - node_modules
+#    - build
+#
+#job_install:
+#  stage: install
+#  tags:
+#    - tool
+#  script:
+#    - npm config set registry https://registry.npmmirror.com
+#    - npm install
+#
+#job_build:
+#  stage: build
+#  tags:
+#    - tool
+#  script:
+#    - echo "Environment variables:"
+#    - env
+#    - echo "Running build command:"
+#    - npm run build:$CI_COMMIT_BRANCH
+
+# ssh_key秘钥的方式推送
+# job_deploy:
+#   stage: deploy
+#   only:
+#   - prod
+#   - uat
+#   - stage
+#   tags:
+#     - tool
+#   before_script:
+#     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+#   script:
+#     - scp -r dist/* $SSH_USER@$SSH_HOST:/etc/nginx/html/platfrom
+#   environment:
+#     name: $CI_COMMIT_REF_NAME
+# 密码登录推送方式
+#job_deploy:
+#  stage: deploy
+#  tags:
+#    - tool
+#  only:
+#    - prod
+#    - uat
+#    - stage
+#  # before_script:
+#    # - 'which sshpass || (apt-get update -y && apt-get install sshpass -y)'
+#  script:
+#    - sshpass -p "$SSH_PASSWORD" ssh $SSH_USER@$SSH_HOST " rm -rf /etc/nginx/html/platfrom/*"
+#    - sshpass -p "$SSH_PASSWORD" scp -r build/* $SSH_USER@$SSH_HOST:/etc/nginx/html/platfrom
+#  environment:
+#    name: $CI_COMMIT_REF_NAME
+

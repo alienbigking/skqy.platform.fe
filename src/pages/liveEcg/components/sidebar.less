@@ -1,0 +1,81 @@
+.sidebar {
+  width: 238px;
+  //height: calc(100% - 80px);
+
+  .header {
+    .searchInput {
+      background-color: #213645;
+      border-color: #4b535c;
+      border-radius: 16px;
+      height: 46px;
+      color: #fff;
+
+      /* 设置输入框的默认文字颜色为灰色 */
+
+      input::placeholder {
+        color: #787878;
+      }
+
+      :global {
+        .ant-input-clear-icon {
+          font-size: 20px;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    background-color: #2f4757;
+    height: calc(100% - 60px);
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 14px;
+    overflow-y: auto;
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      color: #fff;
+      height: 48px;
+      align-items: center;
+      //border: 1px solid #4b535c;
+      border-radius: 9px;
+      padding: 0 10px;
+      margin-top: 10px;
+      background-color: #455864;
+      flex-shrink: 0;
+
+      &:hover {
+        background-color: #089f83;
+        cursor: pointer;
+      }
+
+      .itemContent {
+        display: flex;
+        align-items: center;
+
+        .itemName {
+          font-weight: bold;
+          width: 100px;
+        }
+
+        .itemAge {
+          margin-left: 10px;
+          width: 30px;
+          align-self: center;
+        }
+
+        .gender {
+          margin-left: 10px;
+          align-self: center;
+        }
+
+        .state {
+        }
+      }
+    }
+  }
+}

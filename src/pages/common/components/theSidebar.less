@@ -1,0 +1,32 @@
+.theSidebar {
+  height: calc(100vh);
+
+  .logo {
+    //width: 184px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-inline-end: 1px solid #0505050f;
+
+    .logoImage {
+      width: 120px;
+      height: 24px;
+    }
+
+    .logoShrinkImage {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  :global {
+    .ant-menu {
+      height: calc(100% - 64px);
+      //border-inline-end: none !important;
+      //background-color: #ffffff;
+      overflow: auto;
+    }
+  }
+}

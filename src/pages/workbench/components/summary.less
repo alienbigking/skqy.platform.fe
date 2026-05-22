@@ -1,0 +1,95 @@
+.summary {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  .summaryHeader {
+    .summaryTitle {
+      display: flex;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: #4c4e53;
+      margin-bottom: 10px;
+    }
+
+    .number {
+      display: flex;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 32px;
+      color: #000;
+    }
+  }
+
+  .map {
+    //padding: 0 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .types {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    height: 100px;
+
+    .block {
+      //width: 132px;
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .top {
+        .title {
+          font-size: 14px;
+          color: #4c4e53;
+        }
+
+        .value {
+          font-size: 24px;
+          color: #000;
+          font-weight: bold;
+          margin-top: 5px;
+        }
+      }
+
+      .bottom {
+        display: flex;
+        justify-content: flex-end;
+
+        img {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
+
+    .reportNumber {
+      background: #f5f5f5;
+      margin-right: 10px;
+    }
+
+    .time {
+      background: #e2f5ff;
+      margin-right: 10px;
+    }
+
+    .headcount {
+      background: #f0f0fe;
+      margin-right: 10px;
+    }
+
+    .warnNumber {
+      background: #e2f5ee;
+    }
+  }
+}

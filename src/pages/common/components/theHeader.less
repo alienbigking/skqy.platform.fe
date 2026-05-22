@@ -1,0 +1,79 @@
+.theHeader {
+  height: 64px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 24px;
+  border-bottom: 1px solid #eee;
+
+  .headerContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    //.logo {
+    //  width: 184px;
+    //  height: 64px;
+    //  display: flex;
+    //  align-items: center;
+    //
+    //  img {
+    //    width: 120px;
+    //    height: 24px;
+    //  }
+    //}
+
+    .actions {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .left {
+        flex-shrink: 0;
+      }
+
+      .right {
+        display: flex;
+        align-items: center;
+
+        .btns {
+          display: flex;
+          justify-content: space-between;
+
+          :global {
+            .ant-input-affix-wrapper {
+              border-radius: 16px;
+            }
+          }
+
+          .actionBtn {
+            margin-right: 24px;
+          }
+        }
+
+        .line {
+          width: 1px;
+          height: 24px;
+          background-color: #ddd;
+          margin-right: 24px;
+        }
+
+        .userInfo {
+          display: flex;
+
+          .userName {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #232323;
+            margin-right: 16px;
+          }
+        }
+      }
+    }
+  }
+}

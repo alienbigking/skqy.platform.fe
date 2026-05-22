@@ -1,0 +1,39 @@
+.deviceOffline {
+  position: fixed;
+  bottom: 100px;
+  right: 60px;
+  z-index: 100;
+  width: 260px;
+  height: 280px;
+  border: 1px solid #2589b4;
+  background-color: #2f4757;
+  border-radius: 6px;
+
+  .header {
+    color: #f00;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    height: 40px;
+    align-items: center;
+  }
+
+  .content {
+    padding: 0 20px;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+
+    .item {
+      color: #fff;
+      display: flex;
+      cursor: pointer;
+      margin-bottom: 10px;
+
+      .itemContent {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+  }
+}

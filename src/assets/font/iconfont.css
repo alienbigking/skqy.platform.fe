@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('iconfont.ttf?t=1716783548142') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-rentiwendu:before {
+  content: "\e6af";
+}
+
+.icon-titai:before {
+  content: "\e9e5";
+}
+
+.icon-shoudiantong:before {
+  content: "\e729";
+}
+

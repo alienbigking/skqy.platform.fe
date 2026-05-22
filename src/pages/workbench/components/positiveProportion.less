@@ -1,0 +1,73 @@
+.positiveProportion {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #edeff2;
+  border-radius: 5px;
+  //width: 238px;
+  height: calc(100% - 494px);
+  flex: 1;
+  margin-top: 20px;
+
+  .header {
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    border-bottom: 1px solid #edeff2;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 10px;
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      padding-top: 20px;
+      font-size: 14px;
+      color: #4c4e53;
+    }
+
+    .bottom {
+      position: relative;
+      display: flex;
+
+      .proportion {
+        display: flex;
+        height: 30px;
+        width: 100%;
+
+        .manNumber {
+          background-color: #e2e7ef;
+          //width: 40%;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+        }
+
+        .womanNumber {
+          background-color: #ffd9d9;
+          //width: 60%;
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+        }
+      }
+
+      .text {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 0 5px;
+        font-size: 14px;
+        color: #666971;
+      }
+    }
+  }
+}

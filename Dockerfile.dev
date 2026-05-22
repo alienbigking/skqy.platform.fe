@@ -1,0 +1,8 @@
+# 业务镜像
+FROM harbor.innomedi.cn/yuanxin/dev-platform:1.0.0
+
+# 设置工作目录（可选）
+WORKDIR /usr/share/nginx/html
+
+# 如果你需要在容器内执行额外命令可以加这里，例如启动 nginx
+# CMD ["nginx", "-g", "daemon off;"]

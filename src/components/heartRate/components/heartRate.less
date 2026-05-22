@@ -1,0 +1,232 @@
+.heartRate {
+  position: relative;
+  //height: 150px;
+  display: flex;
+  align-items: center;
+  //transform: translate3d(0, 0, 0);
+  width: 100%;
+
+  // 遮罩层 用户信息层
+  .maskLayer {
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px;
+    width: max-content;
+    //height: 150px;
+    align-items: center;
+    background-color: #2f4757;
+    z-index: 1;
+    box-shadow: 1.8px 3.5px 3.5px 0 rgba(0, 0, 0, 15%);
+
+    .placeholder {
+      flex-shrink: 0;
+      //width: 482px;
+      border: 1px solid #2589b4;
+      border-radius: 8px;
+
+      .header {
+        display: flex;
+        height: 32px;
+
+        .left {
+          display: flex;
+          flex-direction: column;
+          //padding-left: 20px;
+          flex-shrink: 0;
+          width: 160px;
+          padding-left: 16px;
+          //height: 124px;
+          justify-content: center;
+
+          .basicInfo {
+            //margin-bottom: 8px;
+            font-size: 12px;
+            color: #d8d8d8;
+            display: flex;
+
+            .gender {
+              margin-right: 8px;
+            }
+          }
+
+          .name {
+            //margin-bottom: 8px;
+            //font-size: 22px;
+            margin-right: 8px;
+          }
+
+          .symptom {
+            font-size: 12px;
+            color: #7492ab;
+          }
+        }
+
+        .right {
+          //padding-right: 20px;
+          flex: 1;
+          text-align: right;
+          width: 88px;
+          //height: 124px;
+          display: flex;
+          //flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+          //padding: 0 5px;
+          padding-right: 16px;
+
+          .heart {
+            text-align: right;
+            display: flex;
+            //flex-direction: column;
+            font-size: 12px;
+
+            .posture {
+              margin-right: 6px;
+              display: flex;
+              align-items: center;
+
+              .motionState {
+                margin-left: 4px;
+              }
+
+              :global {
+                .iconfont {
+                  //font-size: 12px;
+                  color: #2589b4;
+                }
+              }
+            }
+
+            .temp {
+              margin-right: 6px;
+              display: flex;
+              align-items: center;
+
+              .tempNumber {
+                margin-left: 4px;
+              }
+
+              :global {
+                .iconfont {
+                  //font-size: 12px;
+                  color: #2589b4;
+                }
+              }
+            }
+
+            .bpm {
+              display: flex;
+              justify-content: center;
+              //font-size: 12px;
+              align-items: center;
+              margin-right: 4px;
+
+              :global {
+                .anticon-heart {
+                  color: #f00;
+                  margin-left: 4px;
+                }
+              }
+            }
+
+            .heartNumber {
+              //font-size: 14px;
+              font-weight: bold;
+              display: flex;
+              align-items: center;
+              text-align: center;
+            }
+          }
+
+          .messageInfo {
+            padding: 2px 5px;
+            background-color: #f00;
+            border-radius: 5px;
+            font-size: 12px;
+            text-align: left;
+            margin-left: 8px;
+          }
+        }
+      }
+
+      .heartRateContent {
+        z-index: 10;
+        //margin-left: 196px;
+        height: 114px;
+        position: relative;
+        //border: 1px solid #2589b4;
+        //border-radius: 8px;
+        //padding-top: 18px;
+        margin: 0 0 10px;
+        display: flex;
+        //align-items: center;
+        cursor: pointer;
+        flex-direction: column;
+
+        .thirtySecHeartRate {
+          position: absolute !important;
+          left: 0 !important;
+          top: 0 !important;
+          //margin-top: 5px;
+        }
+
+        .fiveSecHeartRate {
+          position: absolute !important;
+          left: 0 !important;
+          top: 0 !important; // 36
+          //margin-top: 5px;
+          cursor: pointer;
+        }
+
+        //.tenSecHeartRate {
+        //}
+
+        .heartRateBox {
+          background-color: #2f4757;
+        }
+
+        .promptInfo {
+          height: 114px;
+          width: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .deviceDisconnect {
+            color: #f00;
+            font-size: 28px;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .resetHeartRate {
+        margin: 10px 0;
+      }
+    }
+  }
+
+  .redWarnBorder {
+    border-color: #f00 !important;
+  }
+
+  .yellowWarnBorder {
+    border-color: #ff0 !important;
+  }
+}
+
+:global {
+  .showHeartRate {
+    display: flex;
+  }
+
+  .hideHeartRate {
+    display: none;
+  }
+}

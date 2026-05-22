@@ -1,0 +1,160 @@
+.aiReportAnalysis {
+  .main {
+    display: flex;
+    height: calc(100vh - 154px);
+    //overflow-y: auto;
+
+    .left {
+      height: 100%;
+      //overflow: auto;
+      width: 60%;
+
+      .pdfConclusion {
+        width: 595px;
+        height: 842px;
+        padding: 44px;
+        position: absolute;
+        //z-index: -1;
+        display: block;
+        top: -9999px;
+        left: -9999px;
+        animation: none !important;
+        transition: none !important;
+        
+        .main {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
+
+          .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex: 1;
+
+            .headerInfo {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 28px;
+
+              .logoImage {
+                width: 120px;
+                height: 24px;
+              }
+
+              .time {
+                font-size: 12px;
+                color: #707070;
+              }
+            }
+
+            .contentInfo {
+              .title {
+                padding-left: 9px;
+                display: flex;
+                align-items: center;
+                height: 26px;
+                background: #00baa3;
+                color: #fff;
+                margin-bottom: 16px;
+              }
+
+              .value {
+                font-size: 14px;
+                color: #424242;
+                margin-bottom: 16px;
+              }
+
+              .line {
+                height: 1px;
+                width: 100%;
+                background: #ccc;
+                margin-bottom: 16px;
+              }
+
+              .remark {
+                //font-size: 10px;
+                font-size: 10px;
+                color: #707070;
+
+                p {
+                  font-size: 10px;
+                  color: #a5a5a5;
+                }
+
+                div {
+                  font-size: 10px;
+                  color: #a5a5a5;
+                }
+
+                span {
+                  font-size: 10px;
+                  color: #a5a5a5;
+                }
+              }
+            }
+          }
+
+          .footer {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+
+            .signature {
+              display: flex;
+              justify-content: flex-end;
+              margin-bottom: 100px;
+
+              .signatureTitle {
+              }
+            }
+
+            .address {
+              display: flex;
+              flex-direction: column;
+              flex-shrink: 0;
+              color: #9a9a9a;
+              justify-content: center;
+              align-items: center;
+
+              .zhAddress {
+                font-size: 10px;
+                margin-bottom: 10px;
+              }
+
+              .enAddress {
+                font-size: 10px;
+              }
+            }
+          }
+        }
+      }
+
+      .pdfPreview {
+        height: 100%;
+      }
+    }
+
+    .right {
+      width: 40%;
+      flex-shrink: 0;
+
+      .splitLineTitle {
+        :global {
+          label {
+            color: #d4d4d4;
+          }
+        }
+
+        .splitLine {
+          height: 1px;
+          width: 100%;
+          background: #d4d4d4;
+          //margin-bottom: 24px;
+        }
+      }
+    }
+  }
+}

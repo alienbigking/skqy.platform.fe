@@ -1,0 +1,50 @@
+.the500 {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: #e7e8f1;
+
+  .content {
+    display: flex;
+    align-items: center;
+
+    .left {
+      :global {
+        .anticon-database {
+          font-size: 120px;
+          color: #f00;
+        }
+      }
+    }
+
+    .right {
+      margin-left: 50px;
+
+      .code {
+        color: #00bfff;
+        font-size: 50px;
+        font-weight: bold;
+      }
+
+      .info {
+        color: #d4d4d4;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        :global {
+          button {
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+}
