@@ -3,8 +3,6 @@ import type { MenuProps } from 'antd'
 import { Menu } from 'antd'
 import styles from './theSidebar.less'
 import cn from 'classnames'
-import loginImageURl from '@/assets/images/login.png'
-import logoShrinkImageURl from '@/assets/images/logoShrink.png'
 import { history, useLocation } from '@umijs/max'
 // useLocation
 import {
@@ -28,6 +26,7 @@ import {
   ShoppingOutlined,
   SlackOutlined,
   SlidersOutlined,
+  SolutionOutlined,
   UsergroupAddOutlined,
   UserOutlined,
   WechatOutlined
@@ -107,6 +106,9 @@ const TheSidebar: React.FC<Props> = (props) => {
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('当前点击的菜单 ', e)
     console.log('环境', env)
+    if (e.keyPath.length > 1 && e.key === e.keyPath[e.keyPath.length - 1]) {
+      return
+    }
     if (e.key === '/liveEcg') {
       window.open(`${env.HOST_STATIC_RESOURCE_URL}#/liveEcg`, '_blank') // 在新标签页中打开页面
     } else if (e.key === '/aiReportAutoGeneration') {
@@ -130,7 +132,12 @@ const TheSidebar: React.FC<Props> = (props) => {
           return <HomeOutlined />
         case '用户管理':
           return <UserOutlined />
+        case '角色管理':
+          return <UsergroupAddOutlined />
+        case '权限管理':
+          return <SolutionOutlined />
         case '系统配置':
+        case '系统设置':
           return <SettingOutlined />
         case '日志管理':
           return <CalendarOutlined />
@@ -194,13 +201,10 @@ const TheSidebar: React.FC<Props> = (props) => {
       style={{ width: collapsed ? 80 : 208 }}
     >
       <div className={cn(styles.logo)}>
-        <img
-          alt="乐心平江logo"
-          src={collapsed ? logoShrinkImageURl : loginImageURl}
-          className={cn([
-            collapsed ? styles.logoShrinkImage : styles.logoImage
-          ])}
-        />
+        <div className={cn(collapsed ? styles.brandCollapsed : styles.brand)}>
+          <span className={cn(styles.brandMark)}>深</span>
+          {!collapsed && <span className={cn(styles.brandName)}>深空起源</span>}
+        </div>
       </div>
       <Menu
         onClick={onClick}

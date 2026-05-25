@@ -14,9 +14,9 @@ export default defineConfig({
     // 浏览器把相对路径解析成绝对路径时会自动带上 /
     '/yxpt': {
       // target: 'https://local-platform-api.innomedi.cn:8444',
-      target: 'https://test.innomedi.cn',
+      // target: 'https://test.innomedi.cn',
       // target: 'https://prod.innomedi.cn',
-      changeOrigin: true
+      // changeOrigin: true
       //  代理路径重写
       // pathRewrite: { '^yxpt': '/yxpt' }
       // secure: false

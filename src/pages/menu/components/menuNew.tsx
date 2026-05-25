@@ -1,5 +1,4 @@
-import React, { Fragment, memo, useEffect, useState } from 'react'
-import type { RadioChangeEvent } from 'antd'
+import React, { memo, useEffect, useState } from 'react'
 import {
   Col,
   Form,
@@ -7,8 +6,8 @@ import {
   InputNumber,
   message,
   Modal,
-  Radio,
   Row,
+  Switch,
   TreeSelect
 } from 'antd'
 import cn from 'classnames'
@@ -16,7 +15,6 @@ import styles from './menuNew.less'
 import { AdvancedButton } from '@/components/advancedButton'
 import { EType } from '@/components/advancedButton/types/advancedButton'
 import { menuService } from '@/pages/menu/services'
-import { pageTypeOptions } from '@/utils'
 import { EPageType } from '@/pages/common/types/common'
 
 interface Props {
@@ -28,15 +26,14 @@ interface Props {
 type FieldType = {
   type?: string
   name?: string
-  pid?: number
+  pid?: string
   url?: string
   icon?: string
   sort?: number
-  permissions?: string
+  isActive?: boolean
 }
 const MenuNew: React.FC<Props> = memo((props) => {
   const { isVisible = false, handleOk, handleCancel } = props
-  const [isMenu, setIsMenu] = useState(true)
   const [menuOptions, setMenuOptions] = useState([])
 
   const [form] = Form.useForm()
@@ -51,34 +48,27 @@ const MenuNew: React.FC<Props> = memo((props) => {
     const { data } = await menuService.getMenuListByType({
       type: type as EPageType
     })
-    console.log('菜单', data)
-    setMenuOptions(data?.list)
+    setMenuOptions(data?.list || [])
   }
 
   const onOk = async () => {
     const values = await form.validateFields()
-    values.pid = values.pid || 0
-    const data = await menuService.add({ ...values })
-    if (data.code === '200') {
-      message.success(
-        values.type === EPageType.menu ? '新增菜单成功' : '新增权限成功'
-      )
-      setIsMenu(true)
+    values.pid = values.pid || '0'
+    const data = await menuService.add({
+      ...values,
+      type: EPageType.menu
+    })
+    if (data.status === 0) {
+      message.success('新增菜单成功')
       form.resetFields()
       handleOk?.()
+    } else {
+      message.error(data.message || '新增失败')
     }
   }
   const onCancel = () => {
-    setIsMenu(true)
     form.resetFields()
     handleCancel?.()
-  }
-
-  const onChange = ({ target: { value } }: RadioChangeEvent) => {
-    console.log('checked', value)
-
-    getMenuList(EPageType.permission)
-    setIsMenu(value === 0)
   }
 
   const onChangeNumber = () => {}
@@ -86,7 +76,7 @@ const MenuNew: React.FC<Props> = memo((props) => {
   return (
     <Modal
       className={cn(styles.menuNew)}
-      title="新增页面配置"
+      title="新增菜单"
       open={isVisible}
       width={568}
       centered
@@ -117,18 +107,9 @@ const MenuNew: React.FC<Props> = memo((props) => {
         colon={false}
         labelAlign="right"
         labelCol={{ span: 4 }}
-        initialValues={{ type: 0, sort: 1 }}
+        initialValues={{ type: EPageType.menu, sort: 1, isActive: true }}
       >
         <Row gutter={24}>
-          <Col span={24}>
-            <Form.Item<FieldType>
-              label="类型"
-              name="type"
-              rules={[{ required: true, message: '请选择类型' }]}
-            >
-              <Radio.Group options={pageTypeOptions} onChange={onChange} />
-            </Form.Item>
-          </Col>
           <Col span={24}>
             <Form.Item<FieldType>
               label="名称"
@@ -138,58 +119,33 @@ const MenuNew: React.FC<Props> = memo((props) => {
               <Input placeholder="请输入名称" />
             </Form.Item>
           </Col>
-          {isMenu ? (
-            <Fragment>
-              <Col span={24}>
-                <Form.Item<FieldType>
-                  label="关联菜单"
-                  name="pid"
-                  rules={[{ required: false, message: '请选择关联菜单' }]}
-                >
-                  <TreeSelect
-                    placeholder="请选择关联菜单"
-                    treeData={menuOptions}
-                    allowClear
-                    treeDefaultExpandAll
-                    fieldNames={{
-                      label: 'name',
-                      value: 'id'
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item<FieldType>
-                  label="路由"
-                  name="url"
-                  rules={[{ required: false, message: '请输入路由' }]}
-                >
-                  <Input placeholder="请输入路由" />
-                </Form.Item>
-              </Col>
-            </Fragment>
-          ) : (
-            <Fragment>
-              <Col span={24}>
-                <Form.Item<FieldType>
-                  label="关联页面"
-                  name="pid"
-                  rules={[{ required: false, message: '请选择关联页面' }]}
-                >
-                  <TreeSelect
-                    placeholder="请选择关联页面"
-                    treeData={menuOptions}
-                    allowClear
-                    treeDefaultExpandAll
-                    fieldNames={{
-                      label: 'name',
-                      value: 'id'
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Fragment>
-          )}
+          <Col span={24}>
+            <Form.Item<FieldType>
+              label="关联菜单"
+              name="pid"
+              rules={[{ required: false, message: '请选择关联菜单' }]}
+            >
+              <TreeSelect
+                placeholder="请选择关联菜单"
+                treeData={menuOptions}
+                allowClear
+                treeDefaultExpandAll
+                fieldNames={{
+                  label: 'name',
+                  value: 'id'
+                }}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<FieldType>
+              label="路由"
+              name="url"
+              rules={[{ required: false, message: '请输入路由' }]}
+            >
+              <Input placeholder="请输入路由" />
+            </Form.Item>
+          </Col>
           <Col span={24}>
             <Form.Item<FieldType>
               label="排序"
@@ -206,11 +162,12 @@ const MenuNew: React.FC<Props> = memo((props) => {
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
-              label="授权标识"
-              name="permissions"
-              rules={[{ required: false, message: '请输入授权标识' }]}
+              label="启用"
+              name="isActive"
+              valuePropName="checked"
+              rules={[{ required: false, message: '请选择状态' }]}
             >
-              <Input placeholder="请输入授权标识" />
+              <Switch />
             </Form.Item>
           </Col>
           {/*<Col span={24}>*/}

@@ -1,43 +1,83 @@
 .workbench {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
   width: 100%;
-  margin-top: 24px;
+  padding: 24px 0;
 
-  .main {
-    width: 100%;
+  .hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 28px;
+    margin-bottom: 24px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f7fbfb 0%, #eef7f4 100%);
+    border: 1px solid #e6f1ee;
+    box-shadow: 0 10px 30px rgba(51, 165, 150, 0.08);
+  }
 
-    .topContent {
-      display: flex;
-      justify-content: space-between;
-      flex-shrink: 0;
+  .title {
+    margin-top: 8px;
+    margin-bottom: 8px !important;
+  }
 
-      .left {
-        display: flex;
-        flex-direction: column; // 左侧布局
-        height: 736px;
-        flex: 1;
-      }
+  .subtitle {
+    max-width: 720px;
+    margin-bottom: 16px !important;
+    color: #5f6b6a !important;
+  }
 
-      .middle {
-        height: 736px;
-        flex: 3;
-      }
+  .highlights {
+    gap: 8px;
+  }
 
-      .right {
-        //flex-shrink: 0;
-        height: 736px;
-        flex: 1;
-        //margin-left: 20px;
-      }
+  .highlightTag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #ffffff;
+    border-color: #d9ece8;
+  }
+
+  .heroActions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 180px;
+  }
+
+  .cardGrid {
+    margin-top: 0;
+  }
+
+  .entryCard {
+    height: 100%;
+    border-radius: 16px;
+    border: 1px solid #edf1f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
     }
+  }
 
-    .bottomContent {
-      display: flex;
-      justify-content: space-between;
-      flex-shrink: 0;
-      margin-top: 20px;
-    }
+  .iconWrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 16px;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 12px;
+  }
+
+  .entryTitle {
+    margin-bottom: 8px !important;
+  }
+
+  .entryDesc {
+    margin-bottom: 0 !important;
+    color: #6b7280 !important;
   }
 }

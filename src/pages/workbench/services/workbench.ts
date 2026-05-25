@@ -14,35 +14,35 @@ import {
 
 export default {
   getList(params?: IListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles`, {
+    return http(`${env.HOST_API_URL}roles`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getRankingList(params?: IRankingListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/statistics/online-ranking`, {
+    return http(`${env.HOST_API_URL}workbench/ranking`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getSummaryList(params?: ISummaryListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/statistics/online-users-summary`, {
+    return http(`${env.HOST_API_URL}workbench/summary`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getOverviewList(params?: IOverviewListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/statistics/overview`, {
+    return http(`${env.HOST_API_URL}workbench/overview`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getImmediatePositiveWarnList(params?: IImmediatePositiveWarnListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/statistics/positive-events-date`, {
+    return http(`${env.HOST_API_URL}workbench/positive-events`, {
       params: params
     }).then((response) => {
       return response
@@ -50,7 +50,7 @@ export default {
   },
   getPositiveProportionList(params?: IPositiveProportionListParams) {
     return http(
-      `${env.HOST_API_URL}yxpt/sys/statistics/positive-events-summary`,
+      `${env.HOST_API_URL}workbench/positive-events`,
       {
         params: params
       }
@@ -60,7 +60,7 @@ export default {
   },
   getSeverePositiveList(params?: ISeverePositiveListParams) {
     return http(
-      `${env.HOST_API_URL}yxpt/sys/statistics/serious-positive-events-summary`,
+      `${env.HOST_API_URL}workbench/positive-events`,
       {
         params: params
       }
@@ -69,12 +69,12 @@ export default {
     })
   },
   getDetail(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/${id}`).then((response) => {
+    return http(`${env.HOST_API_URL}role/${id}`).then((response) => {
       return response
     })
   },
   add(params: IAddParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles`, {
+    return http(`${env.HOST_API_URL}role`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -82,7 +82,7 @@ export default {
     })
   },
   update(id: number, params: IUpdateParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/${id}`, {
+    return http(`${env.HOST_API_URL}role/${id}`, {
       method: 'PUT',
       data: params
     }).then((response) => {
@@ -90,7 +90,7 @@ export default {
     })
   },
   delete(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/${id}`, {
+    return http(`${env.HOST_API_URL}role/${id}`, {
       method: 'DELETE'
     }).then((response) => {
       return response

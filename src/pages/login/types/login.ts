@@ -7,8 +7,11 @@ interface IRegisterParams {
 }
 
 interface ILoginParams {
-  captcha: string
-  loginName: string
+  clientId: string
+  clientSecret: string
+  userIdentifier: string
+  credential: string
+  identityType: 'password' | 'code'
 }
 
 interface ISendCaptchaParams {

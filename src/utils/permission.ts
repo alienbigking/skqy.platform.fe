@@ -2,9 +2,9 @@
 import { storage } from '@/utils/index'
 
 const hasPermission = (code: string): boolean => {
-  const data = storage.getSession('permissions')
-  console.log('是否有权限', data.includes(code))
-  return data.includes(code)
+  const data = storage.getSession('permissions') || []
+  const userInfo = storage.getSession('userInfo') || {}
+  return userInfo.isSuperAdmin || data.length === 0 || data.includes(code)
 }
 
 export { hasPermission }

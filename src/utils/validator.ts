@@ -5,16 +5,20 @@ const loginNameValidator = (
   value: StoreValue,
   callback: (error?: string) => void
 ) => {
-  let regex =
-    /^(\+86)?(13\d|14[5-9]|15[0-35-9]|16[25-7]|17[0-8]|18\d|19[0-25-9])\d{8}$|^([\w-.]+@([\w-]+\.)+[\w-]{2,4})$/gi
-  console.log('登录名校验的内容', value)
+  const phoneRegex = /^(\+86)?1[3-9]\d{9}$/
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const usernameRegex = /^[a-zA-Z0-9_.]{3,20}$/
   if (value) {
-    if (regex.test(value)) {
-      console.log('登录名校验通过了')
+    if (
+      phoneRegex.test(value) ||
+      emailRegex.test(value) ||
+      usernameRegex.test(value)
+    ) {
       return Promise.resolve()
     } else {
-      console.log('登录名校验失败了')
-      return Promise.reject('登录名校验失败，请检查是否正确')
+      return Promise.reject(
+        '请输入手机号、邮箱或 3-20 位用户名（字母、数字、下划线、点号）'
+      )
     }
   } else {
     return Promise.resolve()

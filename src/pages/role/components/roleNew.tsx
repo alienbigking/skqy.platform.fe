@@ -5,9 +5,7 @@ import styles from './roleNew.less'
 import { AdvancedButton } from '@/components/advancedButton'
 import { EType } from '@/components/advancedButton/types/advancedButton'
 import { roleService } from '@/pages/role/services'
-import { menuService } from '@/pages/menu/services'
-import { commonService } from '@/pages/common/services'
-import { EPageType } from '@/pages/common/types/common'
+import { permissionService } from '@/pages/permission/services'
 
 interface Props {
   isVisible?: boolean
@@ -17,52 +15,42 @@ interface Props {
 
 type FieldType = {
   name?: string
+  roleCode?: string
   organizationIds?: string[]
-  menuIds?: []
+  permissionIds?: string[]
   remark?: string
 }
 const RoleNew: React.FC<Props> = memo((props) => {
   const { isVisible = false, handleOk, handleCancel } = props
-  const [menuOptions, setMenuOptions] = useState([])
-  const [organizationOptions, setOrganizationOptions] = useState([])
+  const [permissionOptions, setPermissionOptions] = useState([])
 
   const [form] = Form.useForm()
 
   useEffect(() => {
     if (isVisible) {
-      getMenuList(EPageType.permission)
-      getOrganizationList()
+      getPermissionList()
     }
   }, [isVisible])
 
-  const getOrganizationList = async () => {
-    const { code, data } = await commonService.getAllOrganizationsList()
-    if (code === '200') {
-      console.log('获取的机构数据', data)
-      setOrganizationOptions(data.list)
-    }
-  }
-  const getMenuList = async (type?: EPageType) => {
-    const { data } = await menuService.getMenuListByType({
-      type: type as EPageType
+  const getPermissionList = async () => {
+    const { data } = await permissionService.getList({
+      tree: true,
+      page: 1,
+      pageSize: 1000
     })
-    const result = data.list.map((item: any) => {
-      item.value = item.id
-      item.label = item.name
-      return item
-    })
-    setMenuOptions(result)
+    setPermissionOptions(data?.list || [])
   }
 
   const onOk = async () => {
     const values = await form.validateFields()
-    console.log('内容', values)
     const data = await roleService.add({ ...values })
 
-    if (data.code === '200') {
+    if (data.status === 0) {
       message.success('新增角色成功')
       form.resetFields()
       handleOk?.()
+    } else {
+      message.error(data.message || '新增角色失败')
     }
   }
   const onCancel = () => {
@@ -117,33 +105,23 @@ const RoleNew: React.FC<Props> = memo((props) => {
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
-              label="关联机构"
-              name="organizationIds"
-              rules={[{ required: false, message: '请选择关联机构' }]}
+              label="角色编码"
+              name="roleCode"
+              rules={[{ required: false, message: '请输入角色编码' }]}
             >
-              <TreeSelect
-                placeholder="请选择关联机构"
-                multiple
-                treeData={organizationOptions}
-                allowClear
-                treeDefaultExpandAll
-                fieldNames={{
-                  label: 'name',
-                  value: 'id'
-                }}
-              />
+              <Input placeholder="不填则自动生成" />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
               label="关联权限"
-              name="menuIds"
+              name="permissionIds"
               rules={[{ required: false, message: '请选择关联权限' }]}
             >
               <TreeSelect
                 placeholder="请选择关联权限"
                 multiple
-                treeData={menuOptions}
+                treeData={permissionOptions}
                 allowClear
                 treeDefaultExpandAll
                 fieldNames={{

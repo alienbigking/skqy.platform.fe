@@ -1,0 +1,122 @@
+# skqy.platform.fe - LLM 项目说明
+
+## 项目定位
+- 这是一个基于 `Umi Max + React + Ant Design` 的后台管理系统。
+- 当前目标是适配 `unbounded.social.be` 后端，而不是沿用旧项目的 `yxpt` 业务接口。
+
+## 总体架构
+- 采用“路由入口 + 页面模块 + service 层 + store 层 + 通用组件/工具”的前端分层。
+- 页面按业务域拆分，业务逻辑集中在 `services` 和 `stores`，UI 组件尽量保持轻量。
+- 全局能力由 `src/app.ts`、`src/rootContainer.ts`、`src/access.ts`、`src/utils/http.ts` 统一装配。
+- 权限和登录状态在应用启动时初始化，再由页面路由和组件权限控制共同决定可见范围。
+
+## 技术架构
+- 运行时：Node.js + Umi Max
+- UI：React + Ant Design + Ant Design Pro
+- 状态管理：Recoil / store 分层
+- 请求层：`src/utils/http.ts`
+- 环境配置：`src/config/env.ts` + `.umirc.*.ts`
+- 路由入口：`src/routes.ts`
+- 权限入口：`src/access.ts`、`src/wrappers/auth.jsx`
+
+## 目录与层级结构
+```text
+src/
+├── app.ts                 # 运行时配置
+├── access.ts              # 页面级权限能力定义
+├── config/                # 环境和运行配置
+├── utils/                 # 请求、格式化、存储、工具方法
+├── components/           # 通用业务组件
+├── pages/                # 业务页面
+│   ├── <module>/         # 单个业务模块
+│   │   ├── components/   # 视图组件
+│   │   ├── services/     # 接口调用与业务请求封装
+│   │   ├── stores/       # 页面状态管理
+│   │   └── types/        # 类型定义
+│   └── login/            # 登录模块
+└── routes.ts              # 路由声明
+```
+
+## 模块层级规范
+- 顶层是“应用能力”，例如登录、权限、首页壳子、通用布局。
+- 中层是“业务域模块”，例如 `user`、`role`、`permission`、`file`、`menu`、`appConfig`。
+- 底层是“页面子模块”，每个业务域内再拆成列表、新增、编辑、详情等组件。
+- 新功能优先沿用现有模块的目录结构，不要把接口请求写进组件。
+
+## 代码规范
+- 页面按 `pages/<module>/{components,services,stores,types}` 分层。
+- 所有接口调用必须放在 `services` 层，不要直接写在组件里。
+- 组件只负责展示和交互，数据获取和提交交给 service/store。
+- 请求统一通过 `src/utils/http.ts`，自动携带 `token`。
+- 新增模块时优先复用已有的服务、表格、弹窗、表单封装方式。
+
+## 与 `unbounded.social.be` 匹配的功能模块
+- `login`：`/oauth/token` 登录
+- `user`：`/me`、用户资料、角色绑定
+- `role`：`/role`、`/roles`、`/role/:id`
+- `permission`：`/permission`、`/permissions`、`/permission/:id`
+- `file`：`/file`、`/files`
+- `appConfig`：应用基础配置管理
+- `menu`：页面/菜单配置管理
+- `discountExpert`：应用首页入口配置管理，重点对接 `/api/discountExpert/home/config` 和 `/api/discountExpert/home/entries`
+
+## 应用模块层级示例
+- `pages/login/`
+  - `components/`：登录表单、注册、找回密码
+  - `services/`：登录、验证码、注册、重置密码
+- `pages/user/`
+  - `components/`：用户列表、编辑、角色分配
+  - `services/`：用户查询、更新、绑定角色
+- `pages/role/`
+  - `components/`：角色列表、编辑、新增
+  - `services/`：角色 CRUD、权限分配
+- `pages/permission/`
+  - `components/`：权限树、编辑、新增
+  - `services/`：权限 CRUD
+- `pages/menu/`
+  - `components/`：菜单列表、编辑、新增
+  - `services/`：菜单 CRUD
+- `pages/appConfig/`
+  - `components/`：应用配置表格、编辑、新增
+  - `services/`：配置列表与维护
+- `pages/discountExpert/`
+  - `home/components/`：入口列表、编辑、新增
+  - `home/services/`：入口配置查询与维护
+  - `home/stores/`：首页配置状态
+  - `home/types/`：入口与平台配置类型
+
+## 建议保留
+- 登录页
+- 用户管理
+- 角色管理
+- 权限管理
+- 文件管理
+- 页面配置/菜单配置
+- `discountExpert` 专属管理模块
+
+## 建议移除或降权
+- ECG 相关页面与接口
+- 设备管理
+- 报告分析
+- 机构业务配置
+- 旧 `yxpt` 前缀的接口调用
+
+## 后端对接约定
+- 登录：`POST /oauth/token`
+- 当前用户：`GET /me`
+- 角色：`GET/POST/PUT/DELETE /role`、`/roles`
+- 权限：`GET/POST/PUT/DELETE /permission`、`/permissions`
+- 文件：`GET/POST/PUT/DELETE /file`、`/files`
+- `discountExpert` 首页：`GET/POST/PUT/DELETE /api/discountExpert/home/*`
+
+## 迁移原则
+- 先保证主链路可用，再逐步清理旧模块。
+- 旧项目代码可以保留，但必须明确标记为历史模块，不再作为新接口实现依据。
+- 新增接口优先保持 service 层统一封装，避免组件直连后端。
+
+## 管理系统新模块接入规范
+- 每次新增管理系统功能模块，必须同时添加 `src/routes.ts` 页面路由、后端菜单初始化记录及权限初始化记录，保证模块能够在侧边栏展示并能按权限操作。
+- 页面上的新增、编辑、删除、分配等按钮应通过 `Permission` 组件使用对应权限 code；code 必须与 `unbounded.social.be/scripts/init-permissions.js` 保持一致。
+- 侧边栏菜单来自后端数据库，不应在前端写死模块显示逻辑；菜单项的 `url` 必须匹配前端页面路由。
+- 菜单配置列表应保持“分页 + 树状结构”：分页只分页顶层菜单，子菜单完整挂在当前页顶层菜单下。
+- 权限管理列表应展示树状结构，模块节点下直接展示列表、新增、编辑、删除、分配等操作权限；如果后端旧 code 未清理，会出现扁平孤儿节点，应回到 `unbounded.social.be/scripts/init-permissions.js` 清理旧数据并重新初始化。

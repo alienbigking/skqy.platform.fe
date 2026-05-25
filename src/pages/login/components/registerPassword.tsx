@@ -55,11 +55,11 @@ const RegisterPassword: React.FC<Props> = (props) => {
       const data = await loginService.register(registrationData)
       console.log('注册结果', data)
 
-      if (data?.code === '200') {
-        message.success(data.msg)
+      if (data?.status === 0) {
+        message.success(data.message)
         onLogin()
       } else {
-        message.warning(data.msg)
+        message.warning(data.message)
       }
     } catch (error) {
       // 位置信息获取失败时，仍然允许注册（可选）
@@ -68,11 +68,11 @@ const RegisterPassword: React.FC<Props> = (props) => {
         registerTime: new Date().toISOString()
       })
 
-      if (data?.code === '200') {
-        message.success(data.msg)
+      if (data?.status === 0) {
+        message.success(data.message)
         onLogin()
       } else {
-        message.warning(data.msg)
+        message.warning(data.message)
       }
     }
   }
@@ -106,11 +106,11 @@ const RegisterPassword: React.FC<Props> = (props) => {
         loginName: values.loginName
       })
       console.log('获取的验证码', data)
-      if (data.code === '200') {
-        message.success(data.msg)
+      if (data.status === 0) {
+        message.success(data.message)
         handleCountdown()
       } else {
-        message.warning(data.msg)
+        message.warning(data.message)
       }
     } catch (e) {
       message.warning('请求异常，请重试！')

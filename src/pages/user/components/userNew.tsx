@@ -1,21 +1,12 @@
-import React, { memo, useState } from 'react'
-import {
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  Radio,
-  Row,
-  Select
-} from 'antd'
+import React, { memo, useEffect, useState } from 'react'
+import { Col, Form, Input, message, Modal, Radio, Row, Select } from 'antd'
 import cn from 'classnames'
 import styles from './userNew.less'
 import { AdvancedButton } from '@/components/advancedButton'
 import { EType } from '@/components/advancedButton/types/advancedButton'
-import { phoneNumberValidator } from '@/utils'
-import { menuService } from '@/pages/menu/services'
+import { genderOptions, phoneNumberValidator } from '@/utils'
+import { userService } from '@/pages/user/services'
+import { roleService } from '@/pages/role/services'
 
 interface Props {
   isVisible?: boolean
@@ -24,48 +15,67 @@ interface Props {
 }
 
 type FieldType = {
-  name?: string
-  age?: string
-  sex?: string
-  remember?: string
+  nickname?: string
+  userIdentifier?: string
+  password?: string
+  email?: string
+  mobile?: string
+  gender?: string
+  status?: string
+  roleIds?: string[]
+  remark?: string
 }
+
+const statusOptions = [
+  { label: '启用', value: 'enabled' },
+  { label: '禁用', value: 'disabled' }
+]
 
 const UserNew: React.FC<Props> = memo((props) => {
   const { isVisible = false, handleOk, handleCancel } = props
-  const [isOpen, setIsOpen] = useState(false)
-  const [value1, setValue1] = useState('Apple')
+  const [roleOptions, setRoleOptions] = useState([])
   const [form] = Form.useForm()
 
-  const sexOptions = [
-    { label: '男', value: 0 },
-    { label: '女', value: 1 }
-  ]
+  useEffect(() => {
+    if (isVisible) {
+      getRoleList()
+    }
+  }, [isVisible])
+
+  const getRoleList = async () => {
+    const { status, data } = await roleService.getAllList()
+    if (status === 0) {
+      setRoleOptions(data || [])
+    }
+  }
 
   const onOk = async () => {
     const values = await form.validateFields()
-    values.pid = values.pid || 0
-    const data = await menuService.add({ ...values })
-    if (data.code === '200') {
+    const data = await userService.add({
+      ...values,
+      active: values.status === 'disabled' ? 1 : 0
+    })
+    if (data.status === 0) {
       message.success('新增用户成功')
-      handleOk?.()
       form.resetFields()
+      handleOk?.()
+    } else {
+      message.error(data.message || '新增用户失败')
     }
   }
+
   const onCancel = () => {
-    handleCancel?.()
     form.resetFields()
+    handleCancel?.()
   }
-
-  const onSelectState = () => {}
-
-  const onSelectSex = () => {}
 
   return (
     <Modal
-      className={cn(styles.roleNew)}
+      className={cn(styles.userNew)}
       title="新增用户"
       open={isVisible}
       width={568}
+      centered
       onOk={onOk}
       onCancel={onCancel}
       footer={[
@@ -93,38 +103,58 @@ const UserNew: React.FC<Props> = memo((props) => {
         colon={false}
         labelAlign="right"
         labelCol={{ span: 4 }}
+        initialValues={{ status: 'enabled', gender: '0' }}
       >
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item<FieldType>
-              label="用户名"
-              name="name"
-              rules={[{ required: false, message: '请输入用户名' }]}
+              label="昵称"
+              name="nickname"
+              rules={[{ required: true, message: '请输入昵称' }]}
             >
-              <Input placeholder="请输入用户名" allowClear />
+              <Input placeholder="请输入昵称" allowClear />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
-              label="所属机构"
-              name="name"
-              rules={[{ required: false, message: '请选择所属机构' }]}
+              label="登录账号"
+              name="userIdentifier"
+              rules={[{ required: true, message: '请输入登录账号' }]}
+            >
+              <Input placeholder="请输入用户名、邮箱或手机号" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<FieldType>
+              label="登录密码"
+              name="password"
+              rules={[{ required: true, message: '请输入登录密码' }]}
+            >
+              <Input.Password placeholder="请输入登录密码" allowClear />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<FieldType>
+              label="所属角色"
+              name="roleIds"
+              rules={[{ required: false, message: '请选择所属角色' }]}
             >
               <Select
-                onChange={onSelectState}
-                options={[
-                  { value: 'jack', label: 'Jack' },
-                  { value: 'lucy', label: 'Lucy' },
-                  { value: 'Yiminghe', label: 'yiminghe' },
-                  { value: 'disabled', label: 'Disabled', disabled: true }
-                ]}
+                placeholder="请选择所属角色"
+                mode="multiple"
+                options={roleOptions}
+                fieldNames={{
+                  label: 'name',
+                  value: 'id'
+                }}
+                allowClear
               />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
               label="邮箱"
-              name="name"
+              name="email"
               rules={[{ required: false, message: '请输入邮箱' }]}
             >
               <Input placeholder="请输入邮箱" allowClear />
@@ -133,7 +163,7 @@ const UserNew: React.FC<Props> = memo((props) => {
           <Col span={24}>
             <Form.Item<FieldType>
               label="手机号"
-              name="name"
+              name="mobile"
               rules={[
                 { required: false, message: '请输入手机号' },
                 {
@@ -147,41 +177,28 @@ const UserNew: React.FC<Props> = memo((props) => {
           <Col span={24}>
             <Form.Item<FieldType>
               label="性别"
-              name="sex"
+              name="gender"
               rules={[{ required: false, message: '请选择性别' }]}
             >
-              <Radio.Group
-                options={sexOptions}
-                onChange={onSelectSex}
-                value={value1}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item<FieldType>
-              label="年龄"
-              name="age"
-              rules={[{ required: false, message: '请输入年龄' }]}
-            >
-              <InputNumber />
+              <Radio.Group options={genderOptions} />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
               label="账号状态"
-              name="name"
+              name="status"
               rules={[{ required: false, message: '请选择账号状态' }]}
             >
-              <Select
-                defaultValue="lucy"
-                onChange={onSelectState}
-                options={[
-                  { value: 'jack', label: 'Jack' },
-                  { value: 'lucy', label: 'Lucy' },
-                  { value: 'Yiminghe', label: 'yiminghe' },
-                  { value: 'disabled', label: 'Disabled', disabled: true }
-                ]}
-              />
+              <Select placeholder="请选择账号状态" options={statusOptions} />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<FieldType>
+              label="备注"
+              name="remark"
+              rules={[{ required: false, message: '请输入备注' }]}
+            >
+              <Input placeholder="请输入备注" allowClear />
             </Form.Item>
           </Col>
         </Row>

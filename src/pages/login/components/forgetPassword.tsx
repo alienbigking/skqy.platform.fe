@@ -34,11 +34,11 @@ const ForgetPassword: React.FC<Props> = (props) => {
       ...values
     })
     console.log('重置密码结果', data)
-    if (data?.code === '200') {
-      message.success(data.msg)
+    if (data?.status === 0) {
+      message.success(data.message)
       onLogin()
     } else {
-      message.warning(data.msg)
+      message.warning(data.message)
     }
   }
   const onFinishFailed = () => {}
@@ -69,11 +69,11 @@ const ForgetPassword: React.FC<Props> = (props) => {
         loginName: values.loginName
       })
       console.log('获取的验证码', data)
-      if (data.code === '200') {
-        message.success(data.msg)
+      if (data.status === 0) {
+        message.success(data.message)
         handleCountdown()
       } else {
-        message.warning(data.msg)
+        message.warning(data.message)
         setIsDisable(false)
       }
     } catch (e) {

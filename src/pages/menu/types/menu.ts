@@ -8,6 +8,7 @@ interface IAddParams {
   sort?: number
   permissions?: string
   icon?: string
+  isActive?: boolean
 }
 
 interface IUpdateParams {
@@ -19,6 +20,7 @@ interface IUpdateParams {
   sort?: number
   permissions?: string
   icon?: string
+  isActive?: boolean
 }
 
 interface IMenuListByType {
@@ -27,6 +29,7 @@ interface IMenuListByType {
 
 interface IMenuListParams extends IPagination {
   name?: string
+  tree?: boolean
 }
 
 export { IAddParams, IMenuListParams, IMenuListByType, IUpdateParams }

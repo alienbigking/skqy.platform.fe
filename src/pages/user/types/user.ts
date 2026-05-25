@@ -1,18 +1,37 @@
-import { EAccountStatus } from '@/pages/common/types/common'
+import { IPagination } from '@/pages/common/types/common'
 
-interface IUserAddParams {}
+interface IUserAddParams {
+  nickname: string
+  userIdentifier: string
+  password: string
+  email?: string
+  mobile?: string
+  gender?: string
+  status?: string
+  active?: number
+  remark?: string
+  organizationId?: string
+  roleIds?: string[]
+}
 
-interface IListParams {}
+interface IListParams extends IPagination {
+  nickname?: string
+  mobile?: string
+  email?: string
+  status?: string
+}
 
 interface IUpdateParams {
-  id: number
-  nickname: string
-  dataScopeIds?: string
+  id: string
+  nickname?: string
   email?: string
   gender?: string
   mobile?: string
-  status?: EAccountStatus
+  status?: string
+  active?: number
   remark?: string
+  organizationId?: string
+  roleIds?: string[]
 }
 
 interface IAssignParams {

@@ -15,8 +15,9 @@ const Permission: React.FC<Props> = memo((props) => {
   }, [])
 
   const hasPermission = () => {
-    const data = storage.getSession('permissions')
-    const result = data.includes(code)
+    const data = storage.getSession('permissions') || []
+    const userInfo = storage.getSession('userInfo') || {}
+    const result = code ? userInfo.isSuperAdmin || data.length === 0 || data.includes(code) : true
     setIsPermission(result)
   }
 

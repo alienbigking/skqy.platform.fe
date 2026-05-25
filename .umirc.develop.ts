@@ -9,8 +9,9 @@ export default {
       HOST_STATIC_RESOURCE_URL: 'http://localhost:8888', // 服务器静态资源部署地址
       // HOST_ANALYSIS_SERVICE_API_URL: 'https://test.innomedi.cn/instant/V0.2/', //分析服务API
       HOST_ANALYSIS_SERVICE_API_URL: 'http://localhost:8080/', //分析服务API
-      // HOST_API_URL: 'https://test.innomedi.cn/', // https://yxpt.innomedi.cn/业务API
-      HOST_API_URL: '', // 后端开启了域名校验，所以不能用localhost，走代理
+      HOST_API_URL: 'http://localhost:3000/', // unbounded.social.be 本地开发后端
+      OAUTH_CLIENT_ID: 'webApp_prod_05ee',
+      OAUTH_CLIENT_SECRET: 'a1123087c319e66afd0f787fbb50dbe3',
       GUACAMOLE_URL: 'https://desktop.inno-medi.com:18090', // 工作台
       WSS_URL: 'wss://ws-test.innomedi.cn/ws/'
 

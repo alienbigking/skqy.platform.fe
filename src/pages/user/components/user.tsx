@@ -17,21 +17,14 @@ import {
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import UserEdit from './userEdit'
-import {
-  accountOptions,
-  filterAccountStatus,
-  gender,
-  hasPermission
-} from '@/utils'
-import {
-  EAccountStatus,
-  IAnyKey,
-  IPagination
-} from '@/pages/common/types/common'
+import { gender } from '@/utils'
+import { IAnyKey, IPagination } from '@/pages/common/types/common'
 import { userService } from '@/pages/user/services'
 import DayJS from 'dayjs'
 import { Permission } from '@/components/permission'
-import UserAssign from './userAssign'
+import UserNew from './userNew'
+import UserRoleAssign from './userRoleAssign'
+import { PlusOutlined } from '@ant-design/icons'
 
 interface Props {}
 
@@ -39,21 +32,31 @@ type FieldType = {
   nickname?: string
   mobile?: string
   email?: string
-  status?: EAccountStatus
+  status?: string
+}
+
+const statusOptions = [
+  { label: '启用', value: 'enabled' },
+  { label: '禁用', value: 'disabled' }
+]
+
+const statusTextMap: Record<string, string> = {
+  enabled: '启用',
+  disabled: '禁用'
 }
 
 const User: React.FC<Props> = (props) => {
   const {} = props
   const [isVisibleNew, setIsVisibleNew] = useState(false)
   const [isVisibleEdit, setIsVisibleEdit] = useState(false)
+  const [isVisibleRoleAssign, setIsVisibleRoleAssign] = useState(false)
   const [rowData, setRowData] = useState({})
   const [tableData, setTableData] = useState<IAnyKey[]>([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState<IPagination>({
-    pageNum: 1,
+    page: 1,
     pageSize: 10
   })
-  const [isVisibleAssign, setIsVisibleAssign] = useState<boolean>(false)
 
   const [form] = Form.useForm()
 
@@ -65,17 +68,10 @@ const User: React.FC<Props> = (props) => {
       render: (value) => <span>{value}</span>
     },
     {
-      hidden: !hasPermission('user.list.invitationCode'),
-      title: '邀请码',
-      dataIndex: 'invitationCode',
-      key: 'invitationCode',
-      render: (value) => <span>{value}</span>
-    },
-    {
-      title: '所属机构',
-      dataIndex: 'organizationName',
-      key: 'organizationName',
-      render: (value) => <span>{value}</span>
+      title: '登录账号',
+      dataIndex: 'userIdentifier',
+      key: 'userIdentifier',
+      render: (value) => <span>{value || '-'}</span>
     },
     {
       title: '邮箱',
@@ -93,13 +89,13 @@ const User: React.FC<Props> = (props) => {
       title: '性别',
       dataIndex: 'gender',
       key: 'gender',
-      render: (value) => <span>{gender(value)}</span>
+      render: (value) => <span>{gender(Number(value))}</span>
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
-      render: (value) => <div>{filterAccountStatus(value)}</div>
+      render: (value) => <div>{statusTextMap[value] || '-'}</div>
     },
     {
       title: '是否激活',
@@ -134,13 +130,13 @@ const User: React.FC<Props> = (props) => {
       width: 250,
       render: (_, value) => (
         <div className={cn(styles.tableActions)}>
-          <Permission code="user.list.assign">
+          <Permission code="user.list.role.assign">
             <Button
               type="text"
               className={cn(['gGeneralTextButton'])}
-              onClick={() => onAssign(value)}
+              onClick={() => onRoleAssign(value)}
             >
-              分配小程序用户
+              分配角色
             </Button>
           </Permission>
           <Permission code="user.list.edit">
@@ -182,19 +178,19 @@ const User: React.FC<Props> = (props) => {
       ...pagination
     })
     console.log('获取的用户列表', data)
-    setTableData(data?.list)
-    setTotal(data?.total)
-  }, [pagination])
+    setTableData(data?.list || [])
+    setTotal(data?.total || 0)
+  }, [form, pagination])
 
   const onSearch = (values: any) => {
     setPagination({
-      pageNum: 1,
+      page: 1,
       pageSize: pagination.pageSize
     })
   }
   const onReset = () => {
     setPagination({
-      pageNum: 1,
+      page: 1,
       pageSize: 10
     })
   }
@@ -203,22 +199,20 @@ const User: React.FC<Props> = (props) => {
     setIsVisibleNew(true)
   }
 
-  const onAssign = (value: any) => {
-    setRowData(value)
-    setIsVisibleAssign(true)
-  }
-
   const onEdit = (value: any) => {
     setIsVisibleEdit(true)
     setRowData(value)
   }
 
-  const onDetail = () => {}
+  const onRoleAssign = (value: any) => {
+    setRowData(value)
+    setIsVisibleRoleAssign(true)
+  }
 
   const onChangeTable = (pagination: any, filters: any) => {
     console.log('分页', pagination, filters)
     setPagination({
-      pageNum: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize
     })
   }
@@ -226,8 +220,8 @@ const User: React.FC<Props> = (props) => {
   const onDelete = async (value: any) => {
     console.log('点击删除了', value)
     const data = await userService.delete(value.id)
-    if (data.code === '200') {
-      message.success('删除菜单成功')
+    if (data.status === 0) {
+      message.success('删除用户成功')
       getList()
     }
   }
@@ -237,18 +231,16 @@ const User: React.FC<Props> = (props) => {
     const data = state
       ? await userService.enable(value.id)
       : await userService.disabled(value.id)
-    if (data.code === '200') {
+    if (data.status === 0) {
       message.success(state ? '启用成功' : '禁用成功')
       getList()
     }
   }
-  const onSelectState = () => {}
-
   const handleNewOk = () => {
     console.log('操作成功')
-    // setIsVisibleNew(false)
+    setIsVisibleNew(false)
     setIsVisibleEdit(false)
-    setIsVisibleAssign(false)
+    setIsVisibleRoleAssign(false)
     getList()
   }
 
@@ -294,9 +286,9 @@ const User: React.FC<Props> = (props) => {
             rules={[{ required: false, message: '请选择账号状态' }]}
           >
             <Select
-              onChange={onSelectState}
-              options={accountOptions}
+              options={statusOptions}
               placeholder="请选择账号状态"
+              allowClear
             />
           </Form.Item>
         </Col>
@@ -304,14 +296,16 @@ const User: React.FC<Props> = (props) => {
       <ContentWrapper>
         <div className={cn(styles.main)}>
           <div className={cn(styles.actions)}>
-            {/*<Button*/}
-            {/*  icon={<PlusOutlined />}*/}
-            {/*  className={cn(['gMainButton'])}*/}
-            {/*  type="primary"*/}
-            {/*  onClick={onNew}*/}
-            {/*>*/}
-            {/*  新增*/}
-            {/*</Button>*/}
+            <Permission code="user.list.create">
+              <Button
+                icon={<PlusOutlined />}
+                className={cn(['gMainButton'])}
+                type="primary"
+                onClick={onNew}
+              >
+                新增
+              </Button>
+            </Permission>
           </div>
           <div className={cn(styles.content)}>
             <Table
@@ -323,7 +317,7 @@ const User: React.FC<Props> = (props) => {
               scroll={{ x: 'max-content' }}
               pagination={{
                 total: total,
-                current: pagination.pageNum,
+                current: pagination.page,
                 pageSize: pagination.pageSize,
                 showSizeChanger: true,
                 showQuickJumper: true,
@@ -333,11 +327,11 @@ const User: React.FC<Props> = (props) => {
           </div>
         </div>
 
-        {/*<UserNew*/}
-        {/*  isVisible={isVisibleNew}*/}
-        {/*  handleOk={() => setIsVisibleNew(false)}*/}
-        {/*  handleCancel={() => setIsVisibleNew(false)}*/}
-        {/*/>*/}
+        <UserNew
+          isVisible={isVisibleNew}
+          handleOk={handleNewOk}
+          handleCancel={() => setIsVisibleNew(false)}
+        />
 
         <UserEdit
           rowData={rowData}
@@ -345,11 +339,11 @@ const User: React.FC<Props> = (props) => {
           handleOk={handleNewOk}
           handleCancel={() => setIsVisibleEdit(false)}
         />
-        <UserAssign
+        <UserRoleAssign
           rowData={rowData}
-          isVisible={isVisibleAssign}
+          isVisible={isVisibleRoleAssign}
           handleOk={handleNewOk}
-          handleCancel={() => setIsVisibleAssign(false)}
+          handleCancel={() => setIsVisibleRoleAssign(false)}
         />
       </ContentWrapper>
     </div>

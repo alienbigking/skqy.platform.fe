@@ -35,11 +35,11 @@ const RegisterAction: React.FC<Props> = (props) => {
       ...values
     })
     console.log('注册结果', data)
-    if (data?.code === '200') {
-      message.success(data.msg)
+    if (data?.status === 0) {
+      message.success(data.message)
       onLogin()
     } else {
-      message.warning(data.msg)
+      message.warning(data.message)
     }
   }
   const onFinishFailed = () => {}
@@ -70,11 +70,11 @@ const RegisterAction: React.FC<Props> = (props) => {
         loginName: values.loginName
       })
       console.log('获取的验证码', data)
-      if (data.code === '200') {
-        message.success(data.msg)
+      if (data.status === 0) {
+        message.success(data.message)
         handleCountdown()
       } else {
-        message.warning(data.msg)
+        message.warning(data.message)
       }
     } catch (e) {
       message.warning('请求异常，请重试！')

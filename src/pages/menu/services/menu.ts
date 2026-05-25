@@ -9,20 +9,19 @@ import {
 
 export default {
   getList(params?: IMenuListParams) {
-    console.log('传入的参数', params)
-    return http(`${env.HOST_API_URL}yxpt/sys/menus`, {
+    return http(`${env.HOST_API_URL}menu/menus`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getDetail(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/menus/${id}`).then((response) => {
+    return http(`${env.HOST_API_URL}menu/menus/${id}`).then((response) => {
       return response
     })
   },
   add(params: IAddParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/menus`, {
+    return http(`${env.HOST_API_URL}menu/menus`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -30,7 +29,7 @@ export default {
     })
   },
   update(params: IUpdateParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/menus/${params.id}`, {
+    return http(`${env.HOST_API_URL}menu/menus/${params.id}`, {
       method: 'PUT',
       data: params
     }).then((response) => {
@@ -38,14 +37,14 @@ export default {
     })
   },
   delete(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/menus/${id}`, {
+    return http(`${env.HOST_API_URL}menu/menus/${id}`, {
       method: 'DELETE'
     }).then((response) => {
       return response
     })
   },
   getMenuListByType(params?: IMenuListByType) {
-    return http(`${env.HOST_API_URL}yxpt/sys/menus/types`, {
+    return http(`${env.HOST_API_URL}menu/menus/types`, {
       params: params
     }).then((response) => {
       return response

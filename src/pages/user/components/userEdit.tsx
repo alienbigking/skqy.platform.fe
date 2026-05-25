@@ -7,23 +7,19 @@ import {
   Modal,
   Radio,
   Row,
-  Select,
-  TreeSelect
+  Select
 } from 'antd'
 import cn from 'classnames'
 import styles from './userEdit.less'
 import { AdvancedButton } from '@/components/advancedButton'
 import { EType } from '@/components/advancedButton/types/advancedButton'
 import {
-  accountOptions,
   genderOptions,
   isNullObject,
   phoneNumberValidator
 } from '@/utils'
-import { EAccountStatus } from '@/pages/common/types/common'
 import { userService } from '@/pages/user/services'
 import { roleService } from '@/pages/role/services'
-import { commonService } from '@/pages/common/services'
 
 interface Props {
   rowData?: any
@@ -38,15 +34,19 @@ type FieldType = {
   mobile?: string
   age?: string
   gender?: string
-  status?: EAccountStatus
-  organizationId?: string
-  roleIds?: []
+  status?: string
+  roleIds?: string[]
+  remark?: string
 }
+
+const statusOptions = [
+  { label: '启用', value: 'enabled' },
+  { label: '禁用', value: 'disabled' }
+]
 
 const UserEdit: React.FC<Props> = memo((props) => {
   const { isVisible = false, handleOk, handleCancel, rowData } = props
 
-  const [organizationOptions, setOrganizationOptions] = useState([])
   const [roleOptions, setRoleOptions] = useState([])
   const [form] = Form.useForm()
 
@@ -54,36 +54,27 @@ const UserEdit: React.FC<Props> = memo((props) => {
     if (!isNullObject(rowData) && isVisible) {
       getDetail()
       getRoleList()
-      getOrganizationList()
     }
   }, [isVisible, rowData])
 
   const getDetail = async () => {
-    const { code, data } = await userService.getDetail(rowData.id)
+    const { status, data } = await userService.getDetail(rowData.id)
     console.log('获取的用户详情信息', data)
-    if (code === '200') {
+    if (status === 0) {
       handleEditData(data)
     }
   }
 
   const getRoleList = async () => {
-    const { code, data } = await roleService.getAllList()
-    if (code === '200') {
+    const { status, data } = await roleService.getAllList()
+    if (status === 0) {
       console.log('获取所有的角色数据', data)
       setRoleOptions(data)
     }
   }
 
-  const getOrganizationList = async () => {
-    const { code, data } = await commonService.getAllOrganizationsList()
-    if (code === '200') {
-      console.log('获取的机构数据', data)
-      setOrganizationOptions(data.list)
-    }
-  }
-
   const handleEditData = (values: any) => {
-    const roleIds = values.roles.map((item: any) => item.id)
+    const roleIds = (values.roles || []).map((item: any) => item.id)
     form.setFieldsValue({
       ...values,
       roleIds
@@ -94,7 +85,7 @@ const UserEdit: React.FC<Props> = memo((props) => {
     const values = await form.validateFields()
     console.log('表单内容', values)
     const data = await userService.update({ id: rowData.id, ...values })
-    if (data.code === '200') {
+    if (data.status === 0) {
       message.success('编辑用户成功')
       form.resetFields()
       handleOk?.()
@@ -104,10 +95,6 @@ const UserEdit: React.FC<Props> = memo((props) => {
     form.resetFields()
     handleCancel?.()
   }
-
-  const onSelectState = () => {}
-
-  const onSelectGender = () => {}
 
   return (
     <Modal
@@ -156,25 +143,6 @@ const UserEdit: React.FC<Props> = memo((props) => {
           </Col>
           <Col span={24}>
             <Form.Item<FieldType>
-              label="所属机构"
-              name="organizationId"
-              rules={[{ required: false, message: '请选择所属机构' }]}
-            >
-              <TreeSelect
-                placeholder="请选择所属机构"
-                onChange={onSelectState}
-                treeData={organizationOptions}
-                allowClear
-                treeDefaultExpandAll
-                fieldNames={{
-                  label: 'name',
-                  value: 'id'
-                }}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={24}>
-            <Form.Item<FieldType>
               label="所属角色"
               name="roleIds"
               rules={[{ required: false, message: '请选择所属角色' }]}
@@ -182,7 +150,6 @@ const UserEdit: React.FC<Props> = memo((props) => {
               <Select
                 placeholder="请选择所属角色"
                 mode="multiple"
-                onChange={onSelectState}
                 options={roleOptions}
                 fieldNames={{
                   label: 'name',
@@ -220,7 +187,7 @@ const UserEdit: React.FC<Props> = memo((props) => {
               name="gender"
               rules={[{ required: false, message: '请选择性别' }]}
             >
-              <Radio.Group options={genderOptions} onChange={onSelectGender} />
+              <Radio.Group options={genderOptions} />
             </Form.Item>
           </Col>
           {/*<Col span={24}>*/}
@@ -238,11 +205,16 @@ const UserEdit: React.FC<Props> = memo((props) => {
               name="status"
               rules={[{ required: false, message: '请选择账号状态' }]}
             >
-              <Select
-                placeholder="请选择账号状态"
-                onChange={onSelectState}
-                options={accountOptions}
-              />
+              <Select placeholder="请选择账号状态" options={statusOptions} />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item<FieldType>
+              label="备注"
+              name="remark"
+              rules={[{ required: false, message: '请输入备注' }]}
+            >
+              <Input placeholder="请输入备注" allowClear />
             </Form.Item>
           </Col>
         </Row>

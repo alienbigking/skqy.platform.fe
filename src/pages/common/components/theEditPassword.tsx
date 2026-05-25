@@ -33,7 +33,7 @@ const TheEditPassword: React.FC<Props> = memo((props) => {
     console.log('内容', values)
     const data = await commonService.updatePassword({ ...values })
 
-    if (data.code === '200') {
+    if (data.status === 0) {
       message.success('更新密码成功')
       form.resetFields()
       handleOk?.()

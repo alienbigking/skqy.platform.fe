@@ -70,8 +70,8 @@ const TheHeader: React.FC<Props> = (props) => {
     if (e.key === '0') {
       setIsVisiblePassword(true)
     } else if (e.key === '1') {
-      const { code } = await commonService.loginOut()
-      if (code === '200') {
+      const { status } = await commonService.loginOut()
+      if (status === 0) {
         storage.setSession('userInfo', {})
         storage.setSession('permissions', [])
         storage.setSession('token', '')
@@ -90,6 +90,9 @@ const TheHeader: React.FC<Props> = (props) => {
     console.log('操作成功')
     setIsVisiblePassword(false)
   }
+  const displayName =
+    userInfo?.nickname || userInfo?.userIdentifier || '未设置昵称'
+
   return (
     <div className={cn(styles.theHeader)}>
       <div className={cn(styles.headerContent)}>
@@ -120,7 +123,7 @@ const TheHeader: React.FC<Props> = (props) => {
                 placement="bottom"
               >
                 <div className={cn(styles.userName)}>
-                  {userInfo?.username}
+                  <span className={cn(styles.userNameText)}>{displayName}</span>
                   <DownOutlined style={{ marginLeft: 8 }} />
                 </div>
               </Dropdown>

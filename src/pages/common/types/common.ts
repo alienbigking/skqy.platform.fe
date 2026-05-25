@@ -156,7 +156,7 @@ type TActionOptions = Array<{
 
 interface IPagination {
   pageSize?: number
-  pageNum?: number
+  page?: number
   sort?: {
     field?: string
     order?: 'asc' | 'desc'
@@ -186,11 +186,14 @@ interface IUserInfoParams {
   email: string
   gender: number
   id: string
+  isSuperAdmin?: boolean
   mobile: string
   nickname: string
   organizationId: string
+  permissions?: string[]
   remark: string
   status: number
+  userIdentifier?: string
   username: string
 }
 

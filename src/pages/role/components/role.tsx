@@ -4,16 +4,7 @@ import styles from './role.less'
 import { HeaderWrapper } from '@/components/headerWrapper'
 import { ContentWrapper } from '@/components/contentWrapper'
 
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  message,
-  Popconfirm,
-  Table,
-  Tooltip
-} from 'antd'
+import { Button, Col, Form, Input, message, Popconfirm, Table, Tooltip } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import RoleNew from './roleNew'
 import RoleEdit from '@/pages/role/components/roleEdit'
@@ -30,12 +21,14 @@ type FieldType = {
   remember?: string
 }
 
-interface DataType {
-  key: string
+interface RoleItem {
+  id: string
   name: string
-  age: number
-  address: string
-  tags: string[]
+  roleCode?: string
+  remark?: string
+  permissions?: any[]
+  organizations?: any[]
+  createAt?: number
 }
 
 const Role: React.FC<Props> = (props) => {
@@ -43,21 +36,27 @@ const Role: React.FC<Props> = (props) => {
   const [isVisibleNew, setIsVisibleNew] = useState(false)
   const [isVisibleEdit, setIsVisibleEdit] = useState(false)
   const [rowData, setRowData] = useState({})
-  const [tableData, setTableData] = useState<DataType[]>([])
+  const [tableData, setTableData] = useState<RoleItem[]>([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState<IPagination>({
-    pageNum: 1,
+    page: 1,
     pageSize: 10
   })
 
   const [form] = Form.useForm()
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<RoleItem> = [
     {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
       render: (value) => <span>{value}</span>
+    },
+    {
+      title: '角色编码',
+      dataIndex: 'roleCode',
+      key: 'roleCode',
+      render: (value) => value || '-'
     },
     {
       title: '关联机构',
@@ -66,23 +65,21 @@ const Role: React.FC<Props> = (props) => {
       width: 250,
       ellipsis: true,
       render: (value) => (
-        <Tooltip placement="top" title={getOrganizationsText(value)}>
-          <span className={cn(styles.tableText)}>
-            {getOrganizationsText(value)}
-          </span>
+        <Tooltip placement="top" title={getNamesText(value)}>
+          <span className={cn(styles.tableText)}>{getNamesText(value)}</span>
         </Tooltip>
       )
     },
     {
       title: '关联权限',
-      dataIndex: 'menus',
-      key: 'menus',
+      dataIndex: 'permissions',
+      key: 'permissions',
       width: 250,
       ellipsis: true,
       render: (value) => (
-        <Tooltip placement="top" title={getOrganizationsText(value)}>
+        <Tooltip placement="top" title={getNamesText(value)}>
           <span className={cn(styles.tableText)}>
-            {getOrganizationsText(value)}
+            {getNamesText(value)}
           </span>
         </Tooltip>
       )
@@ -91,11 +88,7 @@ const Role: React.FC<Props> = (props) => {
       title: '备注',
       dataIndex: 'remark',
       key: 'remark',
-      render: (value, record) => (
-        <div>
-          <span> {value}</span>
-        </div>
-      )
+      render: (value) => value || '-'
     },
     {
       title: '创建时间',
@@ -103,7 +96,7 @@ const Role: React.FC<Props> = (props) => {
       key: 'createAt',
       width: 180,
       render: (value, record) => (
-        <div>{DayJS(value).format('YYYY-MM-DD HH:mm:ss')}</div>
+        <div>{value ? DayJS(value).format('YYYY-MM-DD HH:mm:ss') : '-'}</div>
       )
     },
     {
@@ -150,44 +143,41 @@ const Role: React.FC<Props> = (props) => {
       ...values,
       ...pagination
     })
-    console.log('获取的角色列表', data)
-    setTableData(data.list)
-    setTotal(data.total)
-  }, [pagination])
+    setTableData(data?.list || [])
+    setTotal(data?.total || 0)
+  }, [form, pagination])
 
-  const getOrganizationsText = (value: any[]) => {
-    return value?.map((item: any, index: number) => (
-      <span key={item.id}>
-        {item.name + (index < value.length - 1 ? '、' : '')}
-      </span>
-    ))
+  const getNamesText = (value: any[] = []) => {
+    if (!value.length) return '-'
+    return value.map((item: any) => item.name).join('、')
   }
 
   const onDelete = async (value: any) => {
     const data = await roleService.delete(value.id)
-    if (data.code === '200') {
+    if (data.status === 0) {
       message.success('删除角色成功')
       getList()
+    } else {
+      message.error(data.message || '删除角色失败')
     }
   }
   const onSearch = (values: any) => {
     setPagination({
-      pageNum: 1,
+      page: 1,
       pageSize: pagination.pageSize
     })
   }
 
   const onReset = () => {
     setPagination({
-      pageNum: 1,
+      page: 1,
       pageSize: 10
     })
   }
 
   const onChangeTable = (pagination: any, filters: any) => {
-    console.log('分页', pagination, filters)
     setPagination({
-      pageNum: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize
     })
   }
@@ -202,7 +192,6 @@ const Role: React.FC<Props> = (props) => {
   }
 
   const handleNewOk = () => {
-    console.log('操作成功')
     setIsVisibleNew(false)
     setIsVisibleEdit(false)
     getList()
@@ -248,7 +237,7 @@ const Role: React.FC<Props> = (props) => {
               scroll={{ x: 'max-content' }}
               pagination={{
                 total: total,
-                current: pagination.pageNum,
+                current: pagination.page,
                 pageSize: pagination.pageSize,
                 showSizeChanger: true,
                 showQuickJumper: true,

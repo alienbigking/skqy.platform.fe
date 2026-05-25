@@ -76,14 +76,16 @@ const requestConfig: RequestConfig = {
   ]
 }
 export default (url: string, opt = requestConfig) => {
+  const token = storage.getSession('token') || ''
+
   // 配置请求头
   opt.headers = {
     ...opt.headers,
-    token: storage.getSession('token') || ''
+    Authorization: token ? `Bearer ${token}` : ''
   }
 
   if (opt.headers?.isDisabledToken) {
-    delete opt.headers.token
+    delete opt.headers.Authorization
     delete opt.headers.isDisabledToken
   }
   // console.log('请求头信息', opt)

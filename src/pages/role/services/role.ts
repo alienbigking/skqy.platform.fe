@@ -9,26 +9,26 @@ import {
 
 export default {
   getList(params?: IListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles`, {
+    return http(`${env.HOST_API_URL}roles`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getAllList(params?: IAllListParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/list`, {
+    return http(`${env.HOST_API_URL}roles/list`, {
       params: params
     }).then((response) => {
       return response
     })
   },
   getDetail(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/${id}`).then((response) => {
+    return http(`${env.HOST_API_URL}role/${id}`).then((response) => {
       return response
     })
   },
   add(params: IAddParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles`, {
+    return http(`${env.HOST_API_URL}role`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -36,7 +36,7 @@ export default {
     })
   },
   update(id: number, params: IUpdateParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/${id}`, {
+    return http(`${env.HOST_API_URL}role/${id}`, {
       method: 'PUT',
       data: params
     }).then((response) => {
@@ -44,7 +44,7 @@ export default {
     })
   },
   delete(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/roles/${id}`, {
+    return http(`${env.HOST_API_URL}role/${id}`, {
       method: 'DELETE'
     }).then((response) => {
       return response

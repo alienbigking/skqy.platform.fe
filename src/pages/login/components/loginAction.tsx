@@ -5,7 +5,7 @@ import cn from 'classnames'
 import styles from './loginAction.less'
 import { loginService } from '@/pages/login/services'
 import { loginNameValidator, storage } from '@/utils'
-import { commonService } from '@/pages/common/services'
+import { env } from '@/config/env'
 
 interface Props {
   onRegister?: () => void
@@ -28,32 +28,27 @@ const LoginAction: React.FC<Props> = (props) => {
 
   let timeoutTimer: any, intervalTimer: any
   const onFinish = async (values: any) => {
-    const data = await loginService.login(values)
-    if (data.code === '200') {
-      storage.setSession('token', data.data.token)
-
-      commonService.getUserInfo().then((res) => {
-        console.log('用户信息', res)
-        const { code, data } = res
-        storage.setSession('userInfo', data)
-
-        commonService
-          .getAllPermission()
-          .then((res) => {
-            console.log('获取的用户权限', res.data)
-            if (res.code === '200') {
-              storage.setSession('permissions', res.data)
-              message.success('登录成功')
-              history.push('/workbench')
-            }
-          })
-          .catch((e) => {
-            message.warning('获取用户权限失败')
-          })
+    try {
+      const data = await loginService.login({
+        clientId: env.OAUTH_CLIENT_ID,
+        clientSecret: env.OAUTH_CLIENT_SECRET,
+        userIdentifier: values.loginName,
+        credential: values.captcha,
+        identityType: 'code'
       })
-    } else {
-      message.warning(data.msg)
-
+      if (data.status === 0) {
+        const authData = data.data
+        storage.setSession('token', authData.accessToken)
+        storage.setSession('userInfo', authData.user || {})
+        storage.setSession('permissions', authData.permissions || [])
+        message.success('登录成功')
+        history.push('/workbench')
+      } else {
+        message.warning(data.message || '登录失败')
+      }
+    } catch (error: any) {
+      message.warning(error?.response?.data?.message || '登录失败')
+    } finally {
       setIsDisable(false)
     }
   }
@@ -87,11 +82,11 @@ const LoginAction: React.FC<Props> = (props) => {
       })
       console.log('获取的验证码', data)
 
-      if (data.code === '200') {
-        message.success(data.msg)
+      if (data.status === 0) {
+        message.success(data.message)
         handleCountdown()
       } else {
-        message.warning(data.msg)
+        message.warning(data.message)
 
         setIsDisable(false)
       }
@@ -131,13 +126,13 @@ const LoginAction: React.FC<Props> = (props) => {
               name="loginName"
               validateTrigger="onBlur"
               rules={[
-                { required: true, message: '请输入手机号/邮箱' },
+                { required: true, message: '请输入手机号、邮箱或用户名' },
                 {
                   validator: loginNameValidator
                 }
               ]}
             >
-              <Input placeholder="请输入手机号/邮箱" />
+              <Input placeholder="请输入手机号、邮箱或用户名" />
             </Form.Item>
 
             <Form.Item<FieldType>>

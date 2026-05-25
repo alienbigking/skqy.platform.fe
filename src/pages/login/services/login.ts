@@ -14,7 +14,7 @@ export default {
     })
   },
   register(params: IRegisterParams) {
-    return http(`${env.HOST_API_URL}yxpt/register`, {
+    return http(`${env.HOST_API_URL}register`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -22,7 +22,7 @@ export default {
     })
   },
   login(params: ILoginParams) {
-    return http(`${env.HOST_API_URL}yxpt/login`, {
+    return http(`${env.HOST_API_URL}oauth/token`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -31,7 +31,7 @@ export default {
   },
   sendCaptcha(params: ISendCaptchaParams) {
     console.log('是否为json格式', params)
-    return http(`${env.HOST_API_URL}yxpt/auth/send-captcha`, {
+    return http(`${env.HOST_API_URL}register/send-captcha`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -40,7 +40,7 @@ export default {
     })
   },
   resetPassword(params: IResetPasswordParams) {
-    return http(`${env.HOST_API_URL}yxpt/password/reset/confirm`, {
+    return http(`${env.HOST_API_URL}password/reset/confirm`, {
       method: 'POST',
       data: params
     }).then((response) => {

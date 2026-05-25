@@ -15,7 +15,7 @@ import {
 export default {
   // 文件上传至服务器
   upload(params: IUploadsParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/uploads`, {
+    return http(`${env.HOST_API_URL}file`, {
       method: 'POST',
       headers: {
         'Content-type': 'multipart/form-data'
@@ -38,7 +38,7 @@ export default {
    * @param 获取阿里云上传文件的链接
    * */
   getUploadUrl(params: IUploadUrlParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/files/upload-url`, {
+    return http(`${env.HOST_API_URL}files/upload-url`, {
       params: params
     }).then((response) => {
       return response
@@ -46,7 +46,7 @@ export default {
   },
   // 获取阿里云文件下载链接
   getDownloadUrl(id: number) {
-    return http(`${env.HOST_API_URL}yxpt/sys/files/${id}/download-url`).then(
+    return http(`${env.HOST_API_URL}files/${id}/download-url`).then(
       (response) => {
         return response
       }
@@ -54,7 +54,7 @@ export default {
   },
   // 将文件设置公开的
   setPublicFile(params: ISetPublicFileParams) {
-    return http(`${env.HOST_API_URL}yxpt/sys/files/${params.ossId}/public`, {
+    return http(`${env.HOST_API_URL}files/${params.ossId}/public`, {
       method: 'POST',
       data: params
     }).then((response) => {
@@ -83,14 +83,10 @@ export default {
     })
   },
   getAllPermission() {
-    return http(`${env.HOST_API_URL}yxpt/sys/users/permissions`).then(
-      (response) => {
-        return response
-      }
-    )
+    return Promise.resolve([])
   },
   getMenuBarList() {
-    return http(`${env.HOST_API_URL}yxpt/sys/menu-bar`).then((response) => {
+    return http(`${env.HOST_API_URL}menu/bar`).then((response) => {
       return response
     })
   },
@@ -102,7 +98,7 @@ export default {
     )
   },
   getUserInfo() {
-    return http(`${env.HOST_API_URL}yxpt/sys/users/info`).then((response) => {
+    return http(`${env.HOST_API_URL}me`).then((response) => {
       return response
     })
   },
@@ -121,12 +117,7 @@ export default {
     })
   },
   loginOut(params?: ILoginOutParams) {
-    return http(`${env.HOST_API_URL}yxpt/logout`, {
-      method: 'POST',
-      data: params
-    }).then((response) => {
-      return response
-    })
+    return Promise.resolve({ status: 0 })
   },
   updateEcgAnalysisStatus(params?: IUpdateEcgAnalysisStatusParams) {
     return http(`${env.HOST_API_URL}yxpt/ecg/analysis/${params?.id}/status`, {

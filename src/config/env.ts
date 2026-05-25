@@ -11,6 +11,8 @@ interface IEnv {
   HOST_STATIC_RESOURCE_URL: string
   HOST_ANALYSIS_SERVICE_API_URL: string
   HOST_API_URL: string
+  OAUTH_CLIENT_ID: string
+  OAUTH_CLIENT_SECRET: string
   GUACAMOLE_URL: string
   WSS_URL: string
   UMI_ENV: string
@@ -35,6 +37,8 @@ const extractEnv = (cfg: any): IEnv => {
     HOST_STATIC_RESOURCE_URL: env.HOST_STATIC_RESOURCE_URL || '',
     HOST_ANALYSIS_SERVICE_API_URL: env.HOST_ANALYSIS_SERVICE_API_URL || '',
     HOST_API_URL: env.HOST_API_URL || '',
+    OAUTH_CLIENT_ID: env.OAUTH_CLIENT_ID || '',
+    OAUTH_CLIENT_SECRET: env.OAUTH_CLIENT_SECRET || '',
     GUACAMOLE_URL: env.GUACAMOLE_URL || '',
     WSS_URL: env.WSS_URL || ''
   }

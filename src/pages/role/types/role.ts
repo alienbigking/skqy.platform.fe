@@ -1,11 +1,20 @@
 import { IPagination } from '@/pages/common/types/common'
 
-interface IAddParams {}
+interface IAddParams {
+  name: string
+  roleCode?: string
+  remark?: string
+  permissionIds?: string[]
+  organizationIds?: string[]
+}
 
 interface IUpdateParams {
-  id: number
+  id?: number
   name: string
+  roleCode?: string
   remark: string
+  permissionIds?: string[]
+  organizationIds?: string[]
 }
 
 interface IListParams extends IPagination {

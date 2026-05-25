@@ -4,7 +4,17 @@ import styles from './menu.less'
 import { HeaderWrapper } from '@/components/headerWrapper'
 import { ContentWrapper } from '@/components/contentWrapper'
 
-import { Button, Col, Form, Input, message, Popconfirm, Table, Tag } from 'antd'
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Switch,
+  Table,
+  Tag
+} from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import MenuNew from './menuNew'
 import { menuService } from '@/pages/menu/services'
@@ -21,12 +31,16 @@ type FieldType = {
   remember?: string
 }
 
-interface DataType {
-  key: string
+interface MenuItem {
+  id: string
+  pid: string
   name: string
-  age: number
-  address: string
-  tags: string[]
+  type: number
+  sort: number
+  url: string
+  icon?: string
+  isActive?: boolean
+  children?: MenuItem[]
 }
 
 const Menu: React.FC<Props> = (props) => {
@@ -34,15 +48,16 @@ const Menu: React.FC<Props> = (props) => {
   const [isVisibleNew, setIsVisibleNew] = useState(false)
   const [isVisibleEdit, setIsVisibleEdit] = useState(false)
   const [rowData, setRowData] = useState({})
-  const [tableData, setTableData] = useState<DataType[]>([])
+  const [tableData, setTableData] = useState<MenuItem[]>([])
+  const [statusLoadingId, setStatusLoadingId] = useState('')
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState<IPagination>({
-    pageNum: 1,
+    page: 1,
     pageSize: 10
   })
   const [form] = Form.useForm()
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<MenuItem> = [
     {
       title: '名称',
       dataIndex: 'name',
@@ -66,14 +81,22 @@ const Menu: React.FC<Props> = (props) => {
       key: 'sort'
     },
     {
-      title: '路由',
-      dataIndex: 'url',
-      key: 'url'
+      title: '状态',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      render: (value, record) => (
+        <Switch
+          checked={value !== false}
+          loading={statusLoadingId === record.id}
+          onChange={(checked) => onChangeStatus(record, checked)}
+        />
+      )
     },
     {
-      title: '授权标识',
-      dataIndex: 'permissions',
-      key: 'permissions'
+      title: '路由',
+      dataIndex: 'url',
+      key: 'url',
+      render: (value) => value || '-'
     },
     {
       title: '操作',
@@ -115,35 +138,34 @@ const Menu: React.FC<Props> = (props) => {
 
   const getList = useCallback(async () => {
     const values = form.getFieldsValue()
-    console.log('查询表单内容', values, pagination)
     const { data } = await menuService.getList({
       ...values,
-      ...pagination
+      ...pagination,
+      tree: true
     })
 
-    console.log('获取的菜单列表', data)
-    setTableData(data.list)
-    setTotal(data.total)
-  }, [pagination])
+    setTableData(data?.list || [])
+    setTotal(data?.total || 0)
+  }, [form, pagination])
 
   const onSearch = (values: any) => {
     setPagination({
-      pageNum: 1,
+      page: 1,
       pageSize: pagination.pageSize
     })
   }
 
   const onReset = () => {
+    form.resetFields()
     setPagination({
-      pageNum: 1,
+      page: 1,
       pageSize: 10
     })
   }
 
-  const onChangeTable = (pagination: any, filters: any) => {
-    console.log('分页', pagination, filters)
+  const onChangeTable = (pagination: any) => {
     setPagination({
-      pageNum: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize
     })
   }
@@ -158,16 +180,32 @@ const Menu: React.FC<Props> = (props) => {
   }
 
   const onDelete = async (value: any) => {
-    console.log('点击删除了', value)
     const data = await menuService.delete(value.id)
-    if (data.code === '200') {
+    if (data.status === 0) {
       message.success('删除菜单成功')
       getList()
+    } else {
+      message.error(data.message || '删除菜单失败')
     }
   }
 
+  const onChangeStatus = async (value: MenuItem, checked: boolean) => {
+    setStatusLoadingId(value.id)
+    const response = await menuService.update({
+      ...value,
+      isActive: checked
+    })
+
+    if (response.status === 0) {
+      message.success(checked ? '已启用菜单' : '已禁用菜单')
+      getList()
+    } else {
+      message.error(response.message || '更新菜单状态失败')
+    }
+    setStatusLoadingId('')
+  }
+
   const handleNewOk = () => {
-    console.log('操作成功')
     setIsVisibleNew(false)
     setIsVisibleEdit(false)
     getList()
@@ -176,7 +214,7 @@ const Menu: React.FC<Props> = (props) => {
   return (
     <div className={cn(styles.menu)}>
       <HeaderWrapper
-        title="页面配置"
+        title="菜单栏配置"
         form={form}
         onSearchCallback={onSearch}
         onResetCallback={onReset}
@@ -213,7 +251,7 @@ const Menu: React.FC<Props> = (props) => {
               scroll={{ x: 'max-content' }}
               pagination={{
                 total: total,
-                current: pagination.pageNum,
+                current: pagination.page,
                 pageSize: pagination.pageSize,
                 showSizeChanger: true,
                 showQuickJumper: true,
