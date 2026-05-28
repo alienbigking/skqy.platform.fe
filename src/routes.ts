@@ -53,6 +53,13 @@ export const routes = [
         wrappers: ['@/wrappers/auth']
       },
       {
+        name: '授权客户端',
+        path: '/oauth/client',
+        component: '@/pages/oauthClient/components/oauthClient',
+        customClass: 'oauthClient',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
         name: 'Discount Expert 首页配置',
         path: '/discountExpert/home',
         component: '@/pages/discountExpert/home/components/home',

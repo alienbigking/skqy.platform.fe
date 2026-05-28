@@ -40,6 +40,12 @@ import { env } from '@/config/env'
 interface Props {}
 
 type MenuItem = Required<MenuProps>['items'][number]
+type SidebarMenu = {
+  name: string
+  url: string
+  children?: SidebarMenu[]
+}
+
 const getItem = (
   label: React.ReactNode,
   key: React.Key,
@@ -58,6 +64,7 @@ const getItem = (
 const TheSidebar: React.FC<Props> = (props) => {
   const [collapsed, setCollapsed] = useState(false)
   const [items, setItems] = useState<MenuItem[]>([])
+  const [menuData, setMenuData] = useState<SidebarMenu[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [defaultOpenKeys, setDefaultOpenKeys] = useRecoilState<string[]>(
@@ -75,10 +82,30 @@ const TheSidebar: React.FC<Props> = (props) => {
   useEffect(() => {
     setSelectedKeys([pathname])
     if (items.length === 0) {
-      setDefaultOpenKeys(storage.getSession('defaultOpenKeys'))
+      const storageOpenKeys = storage.getSession('defaultOpenKeys') || []
+      setOpenKeys(storageOpenKeys)
+      setDefaultOpenKeys(storageOpenKeys)
       getList()
     }
   }, [pathname])
+
+  useEffect(() => {
+    if (menuData.length === 0 || collapsed) {
+      return
+    }
+    const currentRouteOpenKeys = findParentKeysByPath(menuData, pathname)
+    if (currentRouteOpenKeys.length === 0) {
+      return
+    }
+    const mergedOpenKeys = Array.from(
+      new Set([...openKeys, ...currentRouteOpenKeys])
+    )
+    if (mergedOpenKeys.length !== openKeys.length) {
+      storage.setSession('defaultOpenKeys', mergedOpenKeys)
+      setOpenKeys(mergedOpenKeys)
+      setDefaultOpenKeys(mergedOpenKeys)
+    }
+  }, [menuData, pathname, collapsed])
 
   useEffect(() => {
     setCollapsed(isExpandMenu)
@@ -87,7 +114,30 @@ const TheSidebar: React.FC<Props> = (props) => {
   const getList = async () => {
     const { data } = await commonService.getMenuBarList()
     console.log('获取的侧边栏菜单集合', data)
-    handleMenuItem(data?.list, false)
+    const list = data?.list || []
+    setMenuData(list)
+    handleMenuItem(list, false)
+  }
+
+  const findParentKeysByPath = (
+    data: SidebarMenu[],
+    path: string,
+    parentKeys: string[] = []
+  ): string[] => {
+    for (const item of data) {
+      const children = item.children || []
+      if (item.url === path) {
+        return parentKeys
+      }
+      const matchedParentKeys = findParentKeysByPath(children, path, [
+        ...parentKeys,
+        item.url
+      ])
+      if (matchedParentKeys.length > 0) {
+        return matchedParentKeys
+      }
+    }
+    return []
   }
 
   const handleMenuItem = (data: any, isChildren = false) => {
@@ -178,6 +228,7 @@ const TheSidebar: React.FC<Props> = (props) => {
         case '机构数据统计':
           return <HeatMapOutlined />
         case '解读管理':
+        case '授权客户端':
           return <CreditCardOutlined />
 
         default:
@@ -202,15 +253,21 @@ const TheSidebar: React.FC<Props> = (props) => {
     >
       <div className={cn(styles.logo)}>
         <div className={cn(collapsed ? styles.brandCollapsed : styles.brand)}>
-          <span className={cn(styles.brandMark)}>深</span>
-          {!collapsed && <span className={cn(styles.brandName)}>深空起源</span>}
+          <span className={cn(styles.brandMark)}>
+            <span className={cn(styles.brandStar)}>S</span>
+          </span>
+          {!collapsed && (
+            <span className={cn(styles.brandText)}>
+              <span className={cn(styles.brandName)}>深空起源</span>
+              <span className={cn(styles.brandLine)}>SKY ORIGIN</span>
+            </span>
+          )}
         </div>
       </div>
       <Menu
         onClick={onClick}
         selectedKeys={selectedKeys}
-        // openKeys={openKeys}
-        defaultOpenKeys={defaultOpenKeys}
+        openKeys={openKeys}
         onOpenChange={onOpenChange}
         mode="inline"
         theme="light"
