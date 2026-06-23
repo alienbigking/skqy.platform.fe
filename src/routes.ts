@@ -65,6 +65,39 @@ export const routes = [
         component: '@/pages/discountExpert/home/components/home',
         customClass: 'discountExpertHome',
         wrappers: ['@/wrappers/auth']
+      },
+      {
+        path: '/deepTab',
+        redirect: '/deepTab/feedback',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
+        name: 'DeepTab 反馈管理',
+        path: '/deepTab/feedback',
+        component: '@/pages/deepTab/feedback/components/feedback',
+        customClass: 'deepTabFeedback',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
+        name: 'DeepTab 邀请管理',
+        path: '/deepTab/invitations',
+        component: '@/pages/deepTab/invitations/components/invitations',
+        customClass: 'deepTabInvitations',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
+        name: 'DeepTab 壁纸管理',
+        path: '/deepTab/wallpapers',
+        component: '@/pages/deepTab/wallpapers/components/wallpapers',
+        customClass: 'deepTabWallpapers',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
+        name: 'DeepTab 同步管理',
+        path: '/deepTab/sync',
+        component: '@/pages/deepTab/sync/components/sync',
+        customClass: 'deepTabSync',
+        wrappers: ['@/wrappers/auth']
       }
     ]
   },
