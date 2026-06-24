@@ -1,38 +1,37 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import cn from 'classnames'
-import styles from './wallpapers.less'
+import styles from './notifications.less'
 import { HeaderWrapper } from '@/components/headerWrapper'
 import { ContentWrapper } from '@/components/contentWrapper'
-import { Button, Col, Form, Input, message, Popconfirm, Select } from 'antd'
+import { Button, Col, Form, Input, Select } from 'antd'
 import { Permission } from '@/components/permission'
-import wallpapersService from '../services/wallpapers'
-import type { IWallpaperRecord } from '../types/wallpapers'
+import notificationsService from '../services/notifications'
+import type { IDeepTabNotification } from '../types/notifications'
 import type { IPagination } from '@/pages/common/types/common'
-import { categorySearchOptions, typeOptions } from './wallpaper-options'
-import WallpaperCreate from './wallpaper-create'
-import WallpaperDetail from './wallpaper-detail'
-import WallpaperEdit from './wallpaper-edit'
-import WallpaperList from './wallpaper-list'
+import NotificationCreate from './notification-create'
+import NotificationDetail from './notification-detail'
+import NotificationEdit from './notification-edit'
+import NotificationList from './notification-list'
+import { statusOptions, typeOptions } from './notification-options'
 
-const Wallpapers: React.FC = () => {
+const Notifications: React.FC = () => {
   const [form] = Form.useForm()
-  const [list, setList] = useState<IWallpaperRecord[]>([])
+  const [list, setList] = useState<IDeepTabNotification[]>([])
   const [loading, setLoading] = useState(false)
-  const [initLoading, setInitLoading] = useState(false)
   const [createVisible, setCreateVisible] = useState(false)
-  const [editing, setEditing] = useState<IWallpaperRecord | null>(null)
-  const [detail, setDetail] = useState<IWallpaperRecord | null>(null)
+  const [editing, setEditing] = useState<IDeepTabNotification | null>(null)
+  const [detail, setDetail] = useState<IDeepTabNotification | null>(null)
+  const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState<IPagination>({
     page: 1,
     pageSize: 10
   })
-  const [total, setTotal] = useState(0)
 
   const load = useCallback(async () => {
     setLoading(true)
     try {
       const values = form.getFieldsValue()
-      const { data } = await wallpapersService.getList({
+      const { data } = await notificationsService.getList({
         ...values,
         ...pagination
       })
@@ -68,27 +67,12 @@ const Wallpapers: React.FC = () => {
     })
   }
 
-  const onInitDefaults = async () => {
-    setInitLoading(true)
-    try {
-      const { status, data } = await wallpapersService.initDefaults()
-      if (status === 0) {
-        message.success(
-          `初始化成功：静态${data?.defaults?.images || 0}条，动态${data?.defaults?.dynamic || 0}条`
-        )
-        load()
-      }
-    } finally {
-      setInitLoading(false)
-    }
-  }
-
   return (
-    <div className={cn(styles.wallpapers)}>
-      <HeaderWrapper title="壁纸管理" form={form} onSearchCallback={onSearch} onResetCallback={onReset}>
+    <div className={cn(styles.notifications)}>
+      <HeaderWrapper title="通知管理" form={form} onSearchCallback={onSearch} onResetCallback={onReset}>
         <Col span={6}>
           <Form.Item name="keyword" label="关键词">
-            <Input placeholder="标题 / 分类 / 来源 / 作者" allowClear />
+            <Input placeholder="标题 / 内容" allowClear />
           </Form.Item>
         </Col>
         <Col span={6}>
@@ -97,31 +81,22 @@ const Wallpapers: React.FC = () => {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item name="category" label="分类">
-            <Select options={categorySearchOptions} placeholder="请选择分类" allowClear />
+          <Form.Item name="status" label="状态">
+            <Select options={statusOptions} placeholder="请选择状态" allowClear />
           </Form.Item>
         </Col>
       </HeaderWrapper>
       <ContentWrapper>
         <div className={cn(styles.main)}>
           <div className={cn(styles.actions)}>
-            <Permission code="deeptab.wallpaper.create">
-              <Popconfirm
-                title="确认初始化默认壁纸吗？"
-                description="将同步多来源静态壁纸和 50+ 动态壁纸到数据库，重复执行会更新默认数据。"
-                onConfirm={onInitDefaults}
-              >
-                <Button loading={initLoading}>初始化默认壁纸</Button>
-              </Popconfirm>
-            </Permission>
-            <Permission code="deeptab.wallpaper.create">
+            <Permission code="deeptab.notification.create">
               <Button type="primary" className={cn(['gMainButton'])} onClick={() => setCreateVisible(true)}>
-                新增壁纸
+                新增通知
               </Button>
             </Permission>
           </div>
           <div className={cn(styles.content)}>
-            <WallpaperList
+            <NotificationList
               list={list}
               loading={loading}
               pagination={pagination}
@@ -134,7 +109,7 @@ const Wallpapers: React.FC = () => {
           </div>
         </div>
 
-        <WallpaperCreate
+        <NotificationCreate
           open={createVisible}
           onCancel={() => setCreateVisible(false)}
           onSuccess={() => {
@@ -142,7 +117,7 @@ const Wallpapers: React.FC = () => {
             load()
           }}
         />
-        <WallpaperEdit
+        <NotificationEdit
           open={!!editing}
           record={editing}
           onCancel={() => setEditing(null)}
@@ -151,10 +126,10 @@ const Wallpapers: React.FC = () => {
             load()
           }}
         />
-        <WallpaperDetail open={!!detail} record={detail} onCancel={() => setDetail(null)} />
+        <NotificationDetail open={!!detail} record={detail} onCancel={() => setDetail(null)} />
       </ContentWrapper>
     </div>
   )
 }
 
-export default Wallpapers
+export default Notifications

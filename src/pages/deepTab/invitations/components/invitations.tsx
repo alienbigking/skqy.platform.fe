@@ -3,32 +3,16 @@ import cn from 'classnames'
 import styles from './invitations.less'
 import { HeaderWrapper } from '@/components/headerWrapper'
 import { ContentWrapper } from '@/components/contentWrapper'
-import { Button, Card, Col, Form, Input, InputNumber, message, Modal, Select, Statistic, Table, Tag } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import DayJS from 'dayjs'
-import { Permission } from '@/components/permission'
+import { Card, Col, Form, Input, Select, Statistic } from 'antd'
 import invitationsService from '../services/invitations'
 import type { IAdminInvitation } from '../types/invitations'
 import type { IPagination } from '@/pages/common/types/common'
-
-const statusOptions = [
-  { label: '全部状态', value: '' },
-  { label: '待接受', value: 'pending' },
-  { label: '已注册', value: 'registered' },
-  { label: '已订阅', value: 'subscribed' },
-  { label: '已失效', value: 'expired' }
-]
-
-const statusColorMap: Record<string, string> = {
-  pending: 'gold',
-  registered: 'blue',
-  subscribed: 'green',
-  expired: 'default'
-}
+import InvitationEdit from './invitation-edit'
+import InvitationList from './invitation-list'
+import { statusOptions } from './invitation-options'
 
 const Invitations: React.FC = () => {
   const [form] = Form.useForm()
-  const [editForm] = Form.useForm()
   const [list, setList] = useState<IAdminInvitation[]>([])
   const [loading, setLoading] = useState(false)
   const [stats, setStats] = useState({
@@ -38,7 +22,6 @@ const Invitations: React.FC = () => {
     totalRewards: 0
   })
   const [current, setCurrent] = useState<IAdminInvitation | null>(null)
-  const [visible, setVisible] = useState(false)
   const [pagination, setPagination] = useState<IPagination>({
     page: 1,
     pageSize: 10
@@ -91,73 +74,6 @@ const Invitations: React.FC = () => {
     })
   }
 
-  const columns: ColumnsType<IAdminInvitation> = [
-    {
-      title: '邀请人',
-      dataIndex: 'user',
-      render: (_, record) =>
-        record.user?.nickname || record.user?.username || record.user?.email || record.userId
-    },
-    {
-      title: '邀请码',
-      dataIndex: 'inviteCode'
-    },
-    {
-      title: '被邀请邮箱',
-      dataIndex: 'inviteeEmail'
-    },
-    {
-      title: '状态',
-      dataIndex: 'inviteeStatus',
-      render: (value) => <Tag color={statusColorMap[value] || 'default'}>{value}</Tag>
-    },
-    {
-      title: '奖励',
-      dataIndex: 'reward',
-      render: (value) => value || 0
-    },
-    {
-      title: '邀请时间',
-      dataIndex: 'inviteDate',
-      width: 180,
-      render: (value) => DayJS(value).format('YYYY-MM-DD HH:mm:ss')
-    },
-    {
-      title: '操作',
-      width: 120,
-      render: (_, record) => (
-        <Permission code="deeptab.invitations.edit">
-          <Button
-            type="link"
-            onClick={() => {
-              setCurrent(record)
-              editForm.setFieldsValue({
-                inviteeStatus: record.inviteeStatus,
-                reward: record.reward
-              })
-              setVisible(true)
-            }}
-          >
-            编辑
-          </Button>
-        </Permission>
-      )
-    }
-  ]
-
-  const onSave = async () => {
-    if (!current) return
-    const values = await editForm.validateFields()
-    const { status } = await invitationsService.update(current.id, values)
-    if (status === 0) {
-      message.success('邀请记录已更新')
-      setVisible(false)
-      setCurrent(null)
-      loadStats()
-      loadList()
-    }
-  }
-
   return (
     <div className={cn(styles.invitations)}>
       <HeaderWrapper title="邀请管理" form={form} onSearchCallback={onSearch} onResetCallback={onReset}>
@@ -189,44 +105,27 @@ const Invitations: React.FC = () => {
             </Card>
           </div>
           <div className={cn(styles.content)}>
-            <Table
-              rowKey="id"
+            <InvitationList
+              list={list}
               loading={loading}
-              columns={columns}
-              dataSource={list}
-              onChange={onChangeTable}
-              scroll={{ x: 'max-content' }}
-              pagination={{
-                total,
-                current: pagination.page,
-                pageSize: pagination.pageSize,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                showTotal: (currentTotal) => `总计${currentTotal}条`
-              }}
+              pagination={pagination}
+              total={total}
+              onChangeTable={onChangeTable}
+              onEdit={setCurrent}
             />
           </div>
         </div>
 
-        <Modal
-          open={visible}
-          title="编辑邀请记录"
-          onOk={onSave}
-          onCancel={() => {
-            setVisible(false)
+        <InvitationEdit
+          open={!!current}
+          record={current}
+          onCancel={() => setCurrent(null)}
+          onSuccess={() => {
             setCurrent(null)
+            loadStats()
+            loadList()
           }}
-          destroyOnClose
-        >
-          <Form form={editForm} layout="vertical">
-            <Form.Item name="inviteeStatus" label="邀请状态" rules={[{ required: true, message: '请选择状态' }]}>
-              <Select options={statusOptions.filter((item) => item.value)} placeholder="请选择邀请状态" />
-            </Form.Item>
-            <Form.Item name="reward" label="奖励值">
-              <InputNumber min={0} precision={2} style={{ width: '100%' }} />
-            </Form.Item>
-          </Form>
-        </Modal>
+        />
       </ContentWrapper>
     </div>
   )

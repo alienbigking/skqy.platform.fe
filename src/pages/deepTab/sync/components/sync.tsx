@@ -3,13 +3,12 @@ import cn from 'classnames'
 import styles from './sync.less'
 import { HeaderWrapper } from '@/components/headerWrapper'
 import { ContentWrapper } from '@/components/contentWrapper'
-import { Button, Col, Descriptions, Form, Input, message, Modal, Popconfirm, Table, Tag } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import DayJS from 'dayjs'
-import { Permission } from '@/components/permission'
+import { Col, Form, Input } from 'antd'
 import syncService from '../services/sync'
 import type { ISyncRecord } from '../types/sync'
 import type { IPagination } from '@/pages/common/types/common'
+import SyncDetail from './sync-detail'
+import SyncList from './sync-list'
 
 const Sync: React.FC = () => {
   const [form] = Form.useForm()
@@ -63,64 +62,11 @@ const Sync: React.FC = () => {
     })
   }
 
-  const columns: ColumnsType<ISyncRecord> = [
-    {
-      title: '用户',
-      dataIndex: 'user',
-      render: (_, record) =>
-        record.user?.nickname || record.user?.username || record.user?.email || record.userId
-    },
-    {
-      title: '版本',
-      dataIndex: 'version',
-      width: 100
-    },
-    {
-      title: '同步项数',
-      dataIndex: 'payload',
-      render: (value) => <Tag>{Object.keys(value || {}).length}</Tag>
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updateDate',
-      width: 180,
-      render: (value) => DayJS(value).format('YYYY-MM-DD HH:mm:ss')
-    },
-    {
-      title: '操作',
-      width: 180,
-      render: (_, record) => (
-        <div className={cn(styles.tableActions)}>
-          <Button
-            type="link"
-            onClick={async () => {
-              const { data } = await syncService.getDetail(record.id)
-              setCurrent(data?.syncData || record)
-              setDetailVisible(true)
-            }}
-          >
-            查看
-          </Button>
-          <Permission code="deeptab.sync.delete">
-            <Popconfirm
-              title="确认删除该同步记录吗？"
-              onConfirm={async () => {
-                const { status } = await syncService.delete(record.id)
-                if (status === 0) {
-                  message.success('同步记录已删除')
-                  load()
-                }
-              }}
-            >
-              <Button type="link" danger>
-                删除
-              </Button>
-            </Popconfirm>
-          </Permission>
-        </div>
-      )
-    }
-  ]
+  const openDetail = async (record: ISyncRecord) => {
+    const { data } = await syncService.getDetail(record.id)
+    setCurrent(data?.syncData || record)
+    setDetailVisible(true)
+  }
 
   return (
     <div className={cn(styles.sync)}>
@@ -134,53 +80,26 @@ const Sync: React.FC = () => {
       <ContentWrapper>
         <div className={cn(styles.main)}>
           <div className={cn(styles.content)}>
-            <Table
-              rowKey="id"
+            <SyncList
+              list={list}
               loading={loading}
-              columns={columns}
-              dataSource={list}
-              onChange={onChangeTable}
-              scroll={{ x: 'max-content' }}
-              pagination={{
-                total,
-                current: pagination.page,
-                pageSize: pagination.pageSize,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                showTotal: (currentTotal) => `总计${currentTotal}条`
-              }}
+              pagination={pagination}
+              total={total}
+              onChangeTable={onChangeTable}
+              onOpenDetail={openDetail}
+              onRefresh={load}
             />
           </div>
         </div>
 
-        <Modal
+        <SyncDetail
           open={detailVisible}
-          title="同步详情"
-          width={900}
-          footer={null}
+          record={current}
           onCancel={() => {
             setDetailVisible(false)
             setCurrent(null)
           }}
-        >
-          {current && (
-            <>
-              <Descriptions bordered column={2} size="small" style={{ marginBottom: 16 }}>
-                <Descriptions.Item label="用户">
-                  {current.user?.nickname || current.user?.username || current.user?.email || current.userId}
-                </Descriptions.Item>
-                <Descriptions.Item label="版本">{current.version}</Descriptions.Item>
-                <Descriptions.Item label="创建时间">
-                  {DayJS(current.createDate).format('YYYY-MM-DD HH:mm:ss')}
-                </Descriptions.Item>
-                <Descriptions.Item label="更新时间">
-                  {DayJS(current.updateDate).format('YYYY-MM-DD HH:mm:ss')}
-                </Descriptions.Item>
-              </Descriptions>
-              <Input.TextArea value={JSON.stringify(current.payload || {}, null, 2)} rows={20} readOnly />
-            </>
-          )}
-        </Modal>
+        />
       </ContentWrapper>
     </div>
   )

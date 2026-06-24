@@ -93,6 +93,13 @@ export const routes = [
         wrappers: ['@/wrappers/auth']
       },
       {
+        name: 'DeepTab 通知管理',
+        path: '/deepTab/notifications',
+        component: '@/pages/deepTab/notifications/components/notifications',
+        customClass: 'deepTabNotifications',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
         name: 'DeepTab 同步管理',
         path: '/deepTab/sync',
         component: '@/pages/deepTab/sync/components/sync',
