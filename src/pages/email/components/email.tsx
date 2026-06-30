@@ -17,7 +17,7 @@ interface Props {}
 type FieldType = {
   to?: string
   subject?: string
-  status?: string
+  sendStatus?: string
 }
 
 interface EmailItem {
@@ -27,7 +27,7 @@ interface EmailItem {
   text?: string
   html?: string
   region?: string
-  status?: string
+  sendStatus?: string
   messageId?: string
   errorMessage?: string
   createDate?: number
@@ -90,8 +90,8 @@ const Email: React.FC<Props> = () => {
     },
     {
       title: '状态',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'sendStatus',
+      key: 'sendStatus',
       width: 120,
       render: (value) => <Tag color={statusColorMap[value] || 'default'}>{statusTextMap[value] || '-'}</Tag>
     },
@@ -214,7 +214,7 @@ const Email: React.FC<Props> = () => {
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item<FieldType> label="状态" name="status">
+          <Form.Item<FieldType> label="状态" name="sendStatus">
             <Select placeholder="请选择状态" options={statusOptions} allowClear />
           </Form.Item>
         </Col>
@@ -257,7 +257,7 @@ const Email: React.FC<Props> = () => {
         >
           <p>收件人：{rowData?.to || '-'}</p>
           <p>主题：{rowData?.subject || '-'}</p>
-          <p>状态：{rowData?.status ? statusTextMap[rowData.status] : '-'}</p>
+          <p>状态：{rowData?.sendStatus ? statusTextMap[rowData.sendStatus] : '-'}</p>
           <p>文本内容：</p>
           <Input.TextArea value={rowData?.text || ''} rows={5} readOnly />
           <p style={{ marginTop: 16 }}>HTML 内容：</p>

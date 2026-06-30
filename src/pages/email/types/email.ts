@@ -3,7 +3,7 @@ import { IPagination } from '@/pages/common/types/common'
 interface IListParams extends IPagination {
   to?: string
   subject?: string
-  status?: string
+  sendStatus?: string
 }
 
 interface ISendParams {
