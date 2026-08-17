@@ -100,6 +100,13 @@ export const routes = [
         wrappers: ['@/wrappers/auth']
       },
       {
+        name: 'DeepTab 宠物语录管理',
+        path: '/deepTab/pet-messages',
+        component: '@/pages/deepTab/petMessages/components/petMessages',
+        customClass: 'deepTabPetMessages',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
         name: 'DeepTab 同步管理',
         path: '/deepTab/sync',
         component: '@/pages/deepTab/sync/components/sync',
