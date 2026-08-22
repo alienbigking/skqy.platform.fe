@@ -28,6 +28,8 @@
     "@ant-design/pro-components": "^2.8.10",
     "@arction/lcjs": "4.2.0",
     "@pixi/react": "^7.1.1",
+    "@tsparticles/react": "^4.3.2",
+    "@tsparticles/slim": "^4.3.2",
     "@umijs/max": "^4.5.2",
     "ahooks": "^3.9.5",
     "antd": "^5.27.5",

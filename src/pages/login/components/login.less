@@ -1,50 +1,78 @@
 .login {
   height: 100vh;
-  background-image: url('@/assets/images/loginBackground.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  min-height: 620px;
+  overflow: hidden;
+  position: relative;
+  background-color: #b9dcf5;
+  isolation: isolate;
   display: flex;
-  //align-items: center;
-  //justify-content: center;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 
+  .particlesBackground {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: auto;
+    height: 100%;
+    width: 100%;
+    background-color: #b9dcf5;
+
+    > div {
+      height: 100%;
+      width: 100%;
+    }
+
+    canvas {
+      display: block;
+      height: 100% !important;
+      width: 100% !important;
+      background-color: transparent !important;
+    }
+  }
+
   .loginHeader {
+    position: relative;
+    z-index: 1;
     display: flex;
     width: 100%;
     height: 48px;
     align-items: center;
     padding-left: 20px;
 
-    .loginTitle {
-      font-size: 22px;
-      font-weight: bold;
-      color: #33a596;
+    img {
+      width: 183px;
+      height: 52px;
+      object-fit: contain;
     }
-
-    //img {
-    //  width: 250px;
-    //  height: 56px;
-    //}
   }
 
   .loginBox {
-    display: flex;
-    //justify-content: center;
-    //align-items: center;
-    width: 1155px;
-    //height: 574px;
     position: relative;
+    z-index: 1;
+    display: flex;
+    width: 1155px;
+    flex: 1;
+    align-items: center;
     flex-direction: column;
+    justify-content: center;
 
     .loginMain {
       display: flex;
       width: 100%;
+      aspect-ratio: 2310 / 1146;
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      background: #ffffff;
+      box-shadow: 0 20px 55px rgba(52, 105, 143, 0.2);
 
-      img {
-        width: 100%;
+      .loginBoxBackground {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        pointer-events: none;
       }
 
       .center {
@@ -52,16 +80,96 @@
         position: absolute;
         width: 100%;
         height: 100%;
+        top: 0;
+        left: 0;
 
         .left {
           display: flex;
           align-items: center;
+          justify-content: center;
           padding-left: 90px;
           flex: 1;
 
-          img {
-            width: 420px;
-            height: 358px;
+          .networkVisual {
+            height: 330px;
+            width: 390px;
+            position: relative;
+            border: 1px solid rgba(74, 133, 175, 0.2);
+            border-radius: 50%;
+            background:
+              radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0 12%, transparent 12.5%),
+              radial-gradient(circle at center, rgba(119, 181, 219, 0.18), transparent 58%);
+            box-shadow: 0 22px 55px rgba(65, 124, 164, 0.14);
+            transform: rotate(-12deg);
+          }
+
+          .networkOrbit {
+            position: absolute;
+            border: 1px solid rgba(66, 132, 177, 0.42);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+
+            &.orbitOne {
+              width: 68%;
+              height: 142%;
+            }
+
+            &.orbitTwo {
+              width: 116%;
+              height: 58%;
+            }
+          }
+
+          .networkCore {
+            position: absolute;
+            width: 86px;
+            height: 86px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle at 34% 28%, #9ddcff, #397ca9 68%, #235c83);
+            box-shadow: 0 0 0 12px rgba(101, 173, 216, 0.13), 0 14px 30px rgba(46, 111, 153, 0.25);
+          }
+
+          .coreDot,
+          .coreRing {
+            position: absolute;
+            display: block;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+          }
+
+          .coreDot {
+            width: 18px;
+            height: 18px;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.75);
+          }
+
+          .coreRing {
+            width: 52px;
+            height: 52px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+          }
+
+          .networkNode {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            background: #4e98c4;
+            box-shadow: 0 0 0 6px rgba(78, 152, 196, 0.16), 0 0 18px rgba(78, 152, 196, 0.5);
+
+            &.nodeOne { left: 18%; top: 31%; }
+            &.nodeTwo { right: 14%; top: 20%; }
+            &.nodeThree { right: 18%; bottom: 18%; }
+            &.nodeFour { left: 12%; bottom: 20%; }
           }
         }
 
@@ -88,27 +196,27 @@
     }
   }
 
-  .loginFooter {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 60px;
-    align-items: center;
+  @media (max-width: 1200px) {
+    .loginBox {
+      width: calc(100% - 40px);
+      max-width: 1155px;
+    }
+  }
 
-    .copyright {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
+  @media (max-width: 760px) {
+    .loginBox {
+      .loginMain {
+        .center {
+          .left {
+            display: none;
+          }
 
-      .copyrightText {
-        line-height: 22px;
-        height: 22px;
-        margin-left: 4px;
-        text-align: center;
-        vertical-align: middle;
-        color: #4f607c;
-        font-size: 12px;
+          .right {
+            padding-right: 0;
+          }
+        }
       }
     }
   }
+
 }

@@ -36,6 +36,8 @@ import { commonStore } from '../stores'
 import { storage } from '@/utils'
 import { commonService } from '@/pages/common/services'
 import { env } from '@/config/env'
+import skyOriginLogo from '@/assets/images/sky-origin-logo.png'
+import skyOriginLogoIcon from '@/assets/images/sky-origin-logo-icon.png'
 
 interface Props {}
 
@@ -253,15 +255,10 @@ const TheSidebar: React.FC<Props> = (props) => {
     >
       <div className={cn(styles.logo)}>
         <div className={cn(collapsed ? styles.brandCollapsed : styles.brand)}>
-          <span className={cn(styles.brandMark)}>
-            <span className={cn(styles.brandStar)}>S</span>
-          </span>
-          {!collapsed && (
-            <span className={cn(styles.brandText)}>
-              <span className={cn(styles.brandName)}>深空起源</span>
-              <span className={cn(styles.brandLine)}>SKY ORIGIN</span>
-            </span>
-          )}
+          <img
+            src={collapsed ? skyOriginLogoIcon : skyOriginLogo}
+            alt="深空起源"
+          />
         </div>
       </div>
       <Menu

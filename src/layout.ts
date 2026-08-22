@@ -1,7 +1,9 @@
+import skyOriginLogo from '@/assets/images/sky-origin-logo-transparent.png'
+
 export const layout = () => {
   return {
     title: '运营系统',
-    logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
+    logo: skyOriginLogo,
     menu: {
       locale: false
     },
