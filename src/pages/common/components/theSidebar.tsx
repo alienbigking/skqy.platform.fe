@@ -6,6 +6,7 @@ import cn from 'classnames'
 import { history, useLocation } from '@umijs/max'
 // useLocation
 import {
+  AppstoreOutlined,
   BuildOutlined,
   CalendarOutlined,
   ClusterOutlined,
@@ -29,6 +30,7 @@ import {
   SolutionOutlined,
   UsergroupAddOutlined,
   UserOutlined,
+  WalletOutlined,
   WechatOutlined
 } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
@@ -182,6 +184,10 @@ const TheSidebar: React.FC<Props> = (props) => {
       switch (item.name) {
         case '工作台':
           return <HomeOutlined />
+        case '钱包慢点':
+          return <WalletOutlined />
+        case 'DeepTab 管理':
+          return <AppstoreOutlined />
         case '用户管理':
           return <UserOutlined />
         case '角色管理':

@@ -10,6 +10,19 @@ module.exports = {
     eqeqeq: [2, 'allow-null'], // 使用 === 替代 ==
     'comma-dangle': ['error', 'never'],
     'eol-last': 2,
+    'padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', prev: '*', next: 'function' },
+      { blankLine: 'always', prev: 'function', next: '*' },
+      { blankLine: 'always', prev: '*', next: 'class' },
+      { blankLine: 'always', prev: 'class', next: '*' },
+      { blankLine: 'always', prev: 'const', next: 'const' }
+    ],
+    'lines-between-class-members': [
+      'error',
+      'always',
+      { exceptAfterSingleLine: true }
+    ],
     'no-use-before-define': 0,
     'no-var': 0,
     '@typescript-eslint/no-empty-interface': 'off',

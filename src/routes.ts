@@ -4,6 +4,12 @@ export const routes = [
     component: '@/pages/main',
     routes: [
       {
+        name: '钱包慢点内容治理',
+        path: '/qianBaoMD',
+        component: '@/pages/qianBaoMD/components/wallet',
+        wrappers: ['@/wrappers/auth']
+      },
+      {
         name: '工作台',
         path: '/workbench',
         component: '@/pages/workbench/components/workbench',

@@ -1,0 +1,41 @@
+.wallet {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  padding: 20px;
+  background: #fff;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.toolbar > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.summary {
+  max-width: 360px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.summary > div {
+  color: #7d858c;
+  margin-top: 8px;
+}
+.handleButton {
+  margin-top: 24px;
+}
