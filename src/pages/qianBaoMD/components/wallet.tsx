@@ -28,8 +28,8 @@ import styles from './wallet.less'
 
 const labels: Record<string, string> = {
   pending: '待审核',
-  visible: '已公开',
-  hidden: '已隐藏',
+  visible: '审核通过',
+  hidden: '审核拒绝',
   resolved: '已处理并隐藏',
   dismissed: '已驳回举报'
 }
